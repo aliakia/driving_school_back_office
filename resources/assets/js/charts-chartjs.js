@@ -8,6 +8,7 @@
   const purpleColor = '#836AF9',
     yellowColor = '#ffe800',
     cyanColor = '#28dac6',
+    testPurpleColor = '655A7C',
     orangeColor = '#FF8132',
     orangeLightColor = '#FDAC34',
     oceanBlueColor = '#299AFF',
@@ -46,25 +47,11 @@
     const barChartVar = new Chart(barChart, {
       type: 'bar',
       data: {
-        labels: [
-          '7/12',
-          '8/12',
-          '9/12',
-          '10/12',
-          '11/12',
-          '12/12',
-          '13/12',
-          '14/12',
-          '15/12',
-          '16/12',
-          '17/12',
-          '18/12',
-          '19/12'
-        ],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         datasets: [
           {
-            data: [275, 90, 190, 205, 125, 85, 55, 87, 127, 150, 230, 280, 190],
-            backgroundColor: cyanColor,
+            data: [1, 2, 3, 4, 5, 6],
+            backgroundColor: testPurpleColor,
             borderColor: 'transparent',
             maxBarThickness: 15,
             borderRadius: {

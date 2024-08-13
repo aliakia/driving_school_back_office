@@ -5,6 +5,7 @@ namespace App\Http\Controllers\laravel_example;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class UserManagement extends Controller
@@ -15,19 +16,8 @@ class UserManagement extends Controller
    */
   public function UserManagement()
   {
-    $users = User::all();
-    $userCount = $users->count();
-    $verified = User::whereNotNull('email_verified_at')->get()->count();
-    $notVerified = User::whereNull('email_verified_at')->get()->count();
-    $usersUnique = $users->unique(['email']);
-    $userDuplicates = $users->diff($usersUnique)->count();
-
-    return view('content.laravel-example.user-management', [
-      'totalUser' => $userCount,
-      'verified' => $verified,
-      'notVerified' => $notVerified,
-      'userDuplicates' => $userDuplicates,
-    ]);
+    $user = DB::table('tb_users')->first();
+    dd($user);
   }
 
   /**
