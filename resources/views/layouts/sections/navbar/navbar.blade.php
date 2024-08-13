@@ -161,7 +161,7 @@
                     </form>
                 @else
                     <li>
-                        <a class="dropdown-item" href="/auth/login">
+                        <a class="dropdown-item" href="auth/login">
                             <i class='ti ti-login me-2'></i>
                             <span class="align-middle">Login</span>
                         </a>

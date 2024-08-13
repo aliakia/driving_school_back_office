@@ -20,7 +20,8 @@ use App\Http\Controllers\laravel_example\UserManagement;
 
 
 
+
 Route::get('/', [DSHomeController::class, 'index'])->name('dashboard');
 
 Route::get('/auth/login', [AuthController::class, 'index'])->name('loginPage');
-Route::get('/auth/login', [AuthController::class, 'store'])->name('loginAccount');
+Route::post('/auth/login', [AuthController::class, 'store'])->name('loginAccount');

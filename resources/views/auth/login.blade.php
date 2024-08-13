@@ -60,7 +60,7 @@
                     <h3 class=" mb-1 fw-bold">Welcome! 👋</h3>
                     <p class="mb-4">Please sign-in to your account.</p>
 
-                    <form id="formAuthentication" class="mb-3" action="/auth/login" method="POST">
+                    <form id="formAuthentication" class="mb-3" action="{{ Route('loginAccount') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="user_id" class="form-label">Username</label>
