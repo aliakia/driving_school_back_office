@@ -13,7 +13,7 @@
 
     /* Display elements */
     $isNavbar = $isNavbar ?? true;
-    $isMenu = $isMenu ?? false;
+    $isMenu = $isMenu ?? true;
     $isFlex = $isFlex ?? false;
     $isFooter = $isFooter ?? true;
     $customizerHidden = $customizerHidden ?? '';
@@ -51,9 +51,9 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
 
-                    @if ($isMenu)
-                        @include('layouts/sections/menu/horizontalMenu')
-                    @endif
+                    {{-- @if ($isMenu)
+        @include('layouts/sections/menu/horizontalMenu')
+        @endif --}}
 
                     <!-- Content -->
                     @if ($isFlex)

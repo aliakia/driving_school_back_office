@@ -73,11 +73,7 @@
                             </div>
                             <div class="flex-grow-1">
                                 <span class="fw-semibold d-block">
-                                    @if (Auth::check())
-                                        {{ Auth::user()->name }}
-                                    @else
-                                        John Doe
-                                    @endif
+                                    {{ $first_name }}
                                 </span>
                                 <small class="text-muted">Admin</small>
                             </div>
@@ -87,86 +83,15 @@
                 <li>
                     <div class="dropdown-divider"></div>
                 </li>
-                <li>
-                    <a class="dropdown-item"
-                        href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
-                        <i class="ti ti-user-check me-2 ti-sm"></i>
-                        <span class="align-middle">My Profile</span>
-                    </a>
-                </li>
-                @if (Auth::check() && Laravel\Jetstream\Jetstream::hasApiFeatures())
-                    <li>
-                        <a class="dropdown-item" href="{{ route('api-tokens.index') }}">
-                            <i class='ti ti-key me-2 ti-sm'></i>
-                            <span class="align-middle">API Tokens</span>
-                        </a>
-                    </li>
-                @endif
 
-                @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                        <h6 class="dropdown-header">Manage Team</h6>
-                    </li>
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                        <a class="dropdown-item"
-                            href="{{ Auth::user() ? route('teams.show', Auth::user()->currentTeam->id) : 'javascript:void(0)' }}">
-                            <i class='ti ti-settings me-2'></i>
-                            <span class="align-middle">Team Settings</span>
-                        </a>
-                    </li>
-                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <li>
-                            <a class="dropdown-item" href="{{ route('teams.create') }}">
-                                <i class='ti ti-user me-2'></i>
-                                <span class="align-middle">Create New Team</span>
-                            </a>
-                        </li>
-                    @endcan
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    <lI>
-                        <h6 class="dropdown-header">Switch Teams</h6>
-                    </lI>
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    @if (Auth::user())
-                        @foreach (Auth::user()->allTeams() as $team)
-                            {{-- Below commented code read by artisan command while installing jetstream. !! Do not remove if you want to use jetstream. --}}
-
-                            {{-- <x-switchable-team :team="$team" /> --}}
-                        @endforeach
-                    @endif
-                @endif
                 <li>
-                    <div class="dropdown-divider"></div>
-                </li>
-                @if (Auth::check())
-                    <li>
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class='ti ti-logout me-2'></i>
-                            <span class="align-middle">Logout</span>
-                        </a>
-                    </li>
-                    <form method="POST" id="logout-form" action="{{ route('logout') }}">
+
+                    <form method="POST" action="{{ route('logoutAccount') }}">
                         @csrf
+                        <button class="btn dropdown-item justify-start align-middle" type="submit"> <i
+                                class='ti ti-login me-2'></i>Logout</button>
                     </form>
-                @else
-                    <li>
-                        <a class="dropdown-item" href="auth/login">
-                            <i class='ti ti-login me-2'></i>
-                            <span class="align-middle">Login</span>
-                        </a>
-                    </li>
-                @endif
+                </li>
             </ul>
         </li>
         <!--/ User -->

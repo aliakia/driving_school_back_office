@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DSController;
 use App\Http\Controllers\DSHomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\laravel_example\UserManagement;
-
+use App\Http\Controllers\PostController;
+use Illuminate\Routing\Controllers\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +22,20 @@ use App\Http\Controllers\laravel_example\UserManagement;
 
 
 
+Route::middleware(['auth.check'])->group(function(){
+    Route::get('/', [DSHomeController::class, 'index'])->name('dashboard');
 
-Route::get('/', [DSHomeController::class, 'index'])->name('dashboard');
 
-Route::get('/auth/login', [AuthController::class, 'index'])->name('loginPage');
-Route::post('/auth/login', [AuthController::class, 'store'])->name('loginAccount');
+    // Driving School Routes
+    Route::get('/ds', [DSController::class, 'index'])->name('drivingSchool');
+    Route::post('/ds', [DSController::class, 'createNewDs'])->name('submitDS');
+});
+
+Route::prefix('auth')->group(function() {
+    Route::middleware(['logged.check'])->group(function() {
+        Route::get('/login', [AuthController::class, 'index'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])->name('loginAccount');
+    
+    });
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logoutAccount');
+});
