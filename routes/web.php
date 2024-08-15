@@ -4,20 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DSController;
 use App\Http\Controllers\DSHomeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\laravel_example\UserManagement;
-use App\Http\Controllers\PostController;
-use Illuminate\Routing\Controllers\Middleware;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 
 
@@ -27,8 +13,14 @@ Route::middleware(['auth.check'])->group(function(){
 
 
     // Driving School Routes
-    Route::get('/ds', [DSController::class, 'index'])->name('drivingSchool');
-    Route::post('/ds', [DSController::class, 'createNewDs'])->name('submitDS');
+    Route::prefix('driving-school')->group(function() {
+        Route::get('/', [DSController::class, 'index'])->name('drivingSchool');
+        Route::get('/create', [DSController::class, 'viewCreateForm'])->name('viewCreateForm');
+        Route::post('/ds', [DSController::class, 'createNewDs'])->name('submitDS');
+        Route::get('/ds/{ds_code}', [DSController::class, 'viewEditForm'])->name('viewEditForm');
+        Route::put('/ds/{ds_code}/edit', [DSController::class, 'updateDs'])->name('updateDs');
+        Route::delete('/ds/{ds_code}/delete', [DSController::class, 'deleteDs'])->name('deleteDs');
+    });
 });
 
 Route::prefix('auth')->group(function() {
