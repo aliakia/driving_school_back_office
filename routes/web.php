@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DSController;
 use App\Http\Controllers\DSHomeController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,6 +21,12 @@ Route::middleware(['auth.check'])->group(function(){
         Route::get('/ds/{ds_code}', [DSController::class, 'viewEditForm'])->name('viewEditForm');
         Route::put('/ds/{ds_code}/edit', [DSController::class, 'updateDs'])->name('updateDs');
         Route::delete('/ds/{ds_code}/delete', [DSController::class, 'deleteDs'])->name('deleteDs');
+    });
+
+
+    // Settings Routes
+    Route::prefix('settings')->group(function() {
+        Route::get('/', [SettingController::class, 'settingLists'])->name('settings');
     });
 });
 

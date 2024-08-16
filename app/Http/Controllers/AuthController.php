@@ -10,14 +10,14 @@ class AuthController extends Controller
 {
     public function index() {
         $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
+        // $first_name = $loggedUser->first_name;
         $pageConfigs = [
             'myLayout' => 'blank'
           ];
 
           return view('auth.login', [
             'pageConfigs' => $pageConfigs,
-            'first_name' => $first_name,
+            // 'first_name' => $first_name,
           ]);
         // return view('auth.login');
     }
