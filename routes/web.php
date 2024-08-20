@@ -38,3 +38,9 @@ Route::prefix('auth')->group(function() {
     });
     Route::post('/logout', [AuthController::class, 'logout'])->name('logoutAccount');
 });
+
+Route::get('/test', function() {
+    return view('ds.test');
+});
+
+Route::post('/test', [DSController::class, 'upload'])->name('upload');

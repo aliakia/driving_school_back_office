@@ -8,26 +8,33 @@
 
 @section('content')
     @if (session('success'))
-        <div style="color: green;">
+        <div class="alert alert-primary alert-dismissible" role="alert">
             {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
         </div>
     @endif
 
     @if (session('error'))
-        <div style="color: red;">
+        <div class="alert alert-danger alert-dismissible" role="alert">
             {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
         </div>
     @endif
 
+
+
+
     <div class="card">
-        <h5 class="card-header">Table Basic</h5>
+        <h5 class="card-header">Driving School List</h5>
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Driving School Code</th>
                         <th>Driving School Name</th>
-                        <th>Is Active</th>
+                        <th>Activity Status</th>
                         <th><a class="btn btn-sm btn-primary" href="{{ route('viewCreateForm') }}">Add</a></th>
                     </tr>
                 </thead>
@@ -35,7 +42,10 @@
 
                     @foreach ($all_ds as $ds)
                         <tr>
-                            <td><i class="ti ti-brand-angular ti-lg text-danger me-3"></i>
+                            <td>
+                                @if ($ds->logo_big)
+                                    <img src="{{ asset($ds->logo_big) }}" alt="" srcset="">
+                                @endif
                                 <strong>{{ $ds->ds_code }}</strong>
                             </td>
                             <td>{{ $ds->ds_name }}</td>
