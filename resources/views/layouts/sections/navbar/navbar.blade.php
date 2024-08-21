@@ -56,7 +56,7 @@
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                    <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/5.png') }}"
+                    <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/harkonnen_logo.png') }}"
                         alt class="h-auto rounded-circle">
                 </div>
             </a>
@@ -67,8 +67,8 @@
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/5.png') }}"
-                                        alt class="h-auto rounded-circle">
+                                    <img src="asset('assets/img/harkonnen_logo.png') }}" alt
+                                        class="h-auto rounded-circle">
                                 </div>
                             </div>
                             <div class="flex-grow-1">
@@ -88,8 +88,7 @@
 
                     <form method="POST" action="{{ route('logoutAccount') }}">
                         @csrf
-                        <button class="btn dropdown-item justify-start align-middle" type="submit"> <i
-                                class='ti ti-login me-2'></i>Logout</button>
+                        <button class="dropdown-item" type="submit"> <i class='ti ti-login me-2'></i>Logout</button>
                     </form>
                 </li>
             </ul>

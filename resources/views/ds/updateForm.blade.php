@@ -39,11 +39,11 @@
                     <h5 class="mb-0">EDIT DRIVING SCHOOL INFORMATION</h5> <small class="text-muted float-end">Default
                         label</small>
                 </div>
+                <hr class="my-4 mx-3" />
                 <div class="card-body">
                     <form method="POST" action="{{ route('updateDs', [$selectedDs->ds_code]) }}">
                         @csrf
                         @method('PUT')
-
                         <div class="row">
                             <div class="col-12 col-md-6 col-xl-3 mb-3">
                                 <div class="form-group">
@@ -93,7 +93,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xl-7 mb-3">
+                            <div class="col-12 col-md-6 col-xl-9 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="description">DESCRIPTION</label>
                                     <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror"
@@ -103,111 +103,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-6 col-md-12 col-xl-5 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="ds_address">DRIVING SCHOOL ADDRESS</label>
-                                    <input id="ds_address" name="ds_address"
-                                        class="form-control @error('ds_address') is-invalid @enderror" placeholder="Address"
-                                        value="{{ old('ds_address', $selectedDs->ds_address) }}">
-                                    @error('ds_address')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
 
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="province">PROVINCE</label>
-                                    <input type="text" id="province" name="province"
-                                        class="form-control @error('province') is-invalid @enderror"
-                                        value="{{ old('province', $selectedDs->province) }}">
-                                    @error('province')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="region">REGION</label>
-                                    <input type="text" id="region" name="region"
-                                        class="form-control @error('region') is-invalid @enderror"
-                                        value="{{ old('region', $selectedDs->region) }}">
-                                    @error('region')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="town_city">TOWN/CITY</label>
-                                    <input type="text" id="town_city" name="town_city"
-                                        class="form-control @error('town_city') is-invalid @enderror"
-                                        value="{{ old('town_city', $selectedDs->town_city) }}">
-                                    @error('town_city')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="dti_accreditation_no">DTI ACCREDITATION NUMBER</label>
-                                    <input type="text" id="dti_accreditation_no" name="dti_accreditation_no"
-                                        class="form-control @error('dti_accreditation_no') is-invalid @enderror"
-                                        value="{{ old('dti_accreditation_no', $selectedDs->dti_accreditation_no) }}">
-                                    @error('dti_accreditation_no')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="lto_accreditation_no">LTO ACCREDITATION NUMBER</label>
-                                    <input type="text" id="lto_accreditation_no" name="lto_accreditation_no"
-                                        class="form-control @error('lto_accreditation_no') is-invalid @enderror"
-                                        value="{{ old('lto_accreditation_no', $selectedDs->lto_accreditation_no) }}">
-                                    @error('lto_accreditation_no')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="date_it_started">DATE IT
-                                        STARTED</label>
-                                    <input type="date" id="date_it_started" name="date_it_started"
-                                        class="flatpickr-date form-control @error('date_it_started') is-invalid @enderror"
-                                        value="{{ old('date_it_started', $selectedDs->date_it_started) }}">
-                                    @error('date_it_started')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="date_it_accredited">DATE IT
-                                        ACCREDITED</label>
-                                    <input type="date" id="date_it_accredited" name="date_it_accredited"
-                                        class="flatpickr-date form-control @error('date_it_accredited') is-invalid @enderror"
-                                        value="{{ old('date_it_accredited', $selectedDs->date_it_accredited) }}">
-                                    @error('date_it_accredited')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="date_it_renewal">DATE IT
-                                        RENEWAL</label>
-                                    <input type="date" id="date_it_renewal" name="date_it_renewal"
-                                        class="flatpickr-date form-control @error('date_it_renewal') is-invalid @enderror"
-                                        value="{{ old('date_it_renewal', $selectedDs->date_it_renewal) }}">
-                                    @error('date_it_renewal')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
                             <div class="col-12 col-md-6 col-xl-3 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="is_active">ACTIVITY STATUS</label>
@@ -226,7 +122,65 @@
                                     @enderror
                                 </div>
                             </div>
+                            <hr class="my-4  " />
+                            <div class="col-12 col-md-6 col-xl-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="town_city">TOWN/CITY</label>
+                                    <input type="text" id="town_city" name="town_city"
+                                        class="form-control @error('town_city') is-invalid @enderror"
+                                        value="{{ old('town_city', $selectedDs->town_city) }}">
+                                    @error('town_city')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
+                            <div class="col-12 col-md-6 col-xl-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="region">REGION</label>
+                                    <input type="text" id="region" name="region"
+                                        class="form-control @error('region') is-invalid @enderror"
+                                        value="{{ old('region', $selectedDs->region) }}">
+                                    @error('region')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="province">PROVINCE</label>
+                                    <input type="text" id="province" name="province"
+                                        class="form-control @error('province') is-invalid @enderror"
+                                        value="{{ old('province', $selectedDs->province) }}">
+                                    @error('province')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <hr class="my-4  " />
+                            <div class="col-12 col-md-6 col-xl-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="dti_accreditation_no">DTI ACCREDITATION NUMBER</label>
+                                    <input type="text" id="dti_accreditation_no" name="dti_accreditation_no"
+                                        class="form-control @error('dti_accreditation_no') is-invalid @enderror"
+                                        value="{{ old('dti_accreditation_no', $selectedDs->dti_accreditation_no) }}">
+                                    @error('dti_accreditation_no')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="lto_accreditation_no">LTO ACCREDITATION NUMBER</label>
+                                    <input type="text" id="lto_accreditation_no" name="lto_accreditation_no"
+                                        class="form-control @error('lto_accreditation_no') is-invalid @enderror"
+                                        value="{{ old('lto_accreditation_no', $selectedDs->lto_accreditation_no) }}">
+                                    @error('lto_accreditation_no')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
                             <div class="col-12 col-md-6 col-xl-3 mb-3">
                                 <div class="form-group">
@@ -272,7 +226,73 @@
                                     @enderror
                                 </div>
                             </div>
+                            <hr class="my-4  " />
                             <div class="col-12 col-md-6 col-xl-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="date_it_started">DATE IT
+                                        STARTED</label>
+                                    <input type="date" id="date_it_started" name="date_it_started"
+                                        class="flatpickr-date form-control @error('date_it_started') is-invalid @enderror"
+                                        value="{{ old('date_it_started', $selectedDs->date_it_started) }}">
+                                    @error('date_it_started')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="date_it_accredited">DATE IT
+                                        ACCREDITED</label>
+                                    <input type="date" id="date_it_accredited" name="date_it_accredited"
+                                        class="flatpickr-date form-control @error('date_it_accredited') is-invalid @enderror"
+                                        value="{{ old('date_it_accredited', $selectedDs->date_it_accredited) }}">
+                                    @error('date_it_accredited')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="date_it_renewal">DATE IT
+                                        RENEWAL</label>
+                                    <input type="date" id="date_it_renewal" name="date_it_renewal"
+                                        class="flatpickr-date form-control @error('date_it_renewal') is-invalid @enderror"
+                                        value="{{ old('date_it_renewal', $selectedDs->date_it_renewal) }}">
+                                    @error('date_it_renewal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="date_it_accreditation_renewal">DATE ACCREDITATION
+                                        RENEWAL</label>
+                                    <input type="date" id="date_it_accreditation_renewal"
+                                        name="date_it_accreditation_renewal"
+                                        class="flatpickr-date form-control @error('date_it_accreditation_renewal') is-invalid @enderror"
+                                        value="{{ old('date_it_accreditation_renewal', $selectedDs->date_it_accreditation_renewal) }}">
+                                    @error('date_it_accreditation_renewal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="date_it_authorization_renewal">DATE IT AUTHORIZATION
+                                        RENEWAL</label>
+                                    <input type="date" id="date_it_authorization_renewal"
+                                        name="date_it_authorization_renewal"
+                                        class="flatpickr-date form-control @error('date_it_authorization_renewal') is-invalid @enderror"
+                                        value="{{ old('date_it_authorization_renewal', $selectedDs->date_it_authorization_renewal) }}">
+                                    @error('date_it_authorization_renewal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <hr class="my-4" />
+                            <div class="col-12 col-md-6 col-xl-6 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="server_location">SERVER LOCATION</label>
                                     <input type="text" id="server_location" name="server_location"
@@ -320,58 +340,18 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="date_it_accreditation_renewal">DATE ACCREDITATION
-                                        RENEWAL</label>
-                                    <input type="date" id="date_it_accreditation_renewal"
-                                        name="date_it_accreditation_renewal"
-                                        class="flatpickr-date form-control @error('date_it_accreditation_renewal') is-invalid @enderror"
-                                        value="{{ old('date_it_accreditation_renewal', $selectedDs->date_it_accreditation_renewal) }}">
-                                    @error('date_it_accreditation_renewal')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="date_it_authorization_renewal">DATE IT AUTHORIZATION
-                                        RENEWAL</label>
-                                    <input type="date" id="date_it_authorization_renewal"
-                                        name="date_it_authorization_renewal"
-                                        class="flatpickr-date form-control @error('date_it_authorization_renewal') is-invalid @enderror"
-                                        value="{{ old('date_it_authorization_renewal', $selectedDs->date_it_authorization_renewal) }}">
-                                    @error('date_it_authorization_renewal')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
+                            <hr class="my-4" />
                             <div class="row">
                                 <div class="col-12 col-md-12 col-lg-5 mb-3">
+
                                     <div class="form-group">
-                                        <label for="current_image">Current Image:</label>
-                                        <div>
-                                            @if ($selectedDs->logo_big)
-                                                <img src="{{ asset('storage/images/' . $selectedDs->logo_big) }}"
-                                                    alt="Logo Big" class="img-fluid">
-                                            @else
-                                                <p>No image uploaded</p>
-                                            @endif
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="">
                                         <label class="form-label" for="logo_big">LOGO BIG</label>
                                         <div class="me-2 mb2">
                                             <input name="file" type="file" name="logo_big" id="logo_big"
                                                 class="form-control" />
                                         </div>
                                     </div>
-                                    <div class="">
+                                    <div class="form-group">
                                         <label class="form-label" for="logo_small">LOGO SMALL</label>
                                         <div class="me-2 mb2">
                                             <input name="file" type="file" name="logo_small" id="logo_small"
@@ -381,7 +361,7 @@
                                 </div>
 
                                 <div class="col-12 col-md-12 col-lg-7 mb-3">
-                                    <div class="">
+                                    <div class="form-group">
                                         <div class="d-flex flex-wrap">
                                             <div class="me-2 mb-2">
                                                 <label class="form-label" for="ds_pic1">DS PICTURES</label>

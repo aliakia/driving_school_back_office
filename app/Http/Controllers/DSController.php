@@ -5,56 +5,52 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
-use function Laravel\Prompts\error;
 
 class DSController extends Controller
 {
-    // public function upload(Request $request)
-    // {
-    //     try {
-    //         // Validate the request
-    //         $request->validate([
-    //             'logo_big' => 'image|mimes:jpg,jpeg,png,gif|max:2048|nullable',
-    //         ]);
+    public function showImages()
+{
+    $images = DB::table('your_table')
+                ->select('id', DB::raw("encode(your_bytea_column, 'base64') as image_base64"))
+                ->get();
 
-    //         // Handle file upload
-    //         if ($request->hasFile('logo_big')) {
-    //             $file = $request->file('logo_big');
-    //             $filename = time() . '.' . $file->getClientOriginalExtension();
-    //             $file->storeAs('public/images', $filename);
+    return view('images.view', ['images' => $images]);
+}
 
-    //             // Redirect to homepage with a success message
-    //             return redirect('/')->with('success', 'File uploaded successfully');
-    //         } else {
-    //             return redirect('/')->with('error', 'No file uploaded');
-    //         }
-    //     } catch (\Exception $e) {
-    //         Log::error($e->getMessage());
+    
+public function index() {
+    $loggedUser = session('logged_in');
+    $first_name = $loggedUser->first_name;
+    
+    // Fetch all records with Base64 encoded images
+    $all_ds = DB::table('tb_ds')
+                ->select(
+                    'ds_code',
+                    'ds_name',
+                    'is_active',
+                    DB::raw("encode(logo_big, 'base64') as logo_big_base64"),
+                    DB::raw("encode(logo_small, 'base64') as logo_small_base64"),
+                    DB::raw("encode(ds_pic1, 'base64') as ds_pic1_base64"),
+                    DB::raw("encode(ds_pic2, 'base64') as ds_pic2_base64"),
+                    DB::raw("encode(ds_pic3, 'base64') as ds_pic3_base64"),
+                    DB::raw("encode(ds_pic4, 'base64') as ds_pic4_base64"),
+                    DB::raw("encode(ds_pic5, 'base64') as ds_pic5_base64"),
+                )
+                ->get();
 
-    //         return redirect('/')->with('error', 'An error occurred while uploading the file');
-    //     }
+    // foreach ($all_ds as $ds) {
+    //     dd($ds->logo_small_base64);
     // }
 
+    return view('ds.viewList', [
+        'all_ds' => $all_ds,
+        'first_name' => $first_name,
+    ]);
+}
 
-    public function index() {
-        $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
-        
-        // Access specific columns from the session data
-
-        $all_ds = DB::table('tb_ds')->get();
-        // if ($all_ds) {
-        //     $all_ds->logo_big = Storage::url($drivingSchool->logo_big ?? '');
-        // }
-
-        return view('ds.viewList', [
-            'all_ds' => $all_ds,
-            'first_name' => $first_name,
-        ]);
-    }
+    
+    
 
     public function viewCreateForm() {
         $loggedUser = session('logged_in');
@@ -67,13 +63,12 @@ class DSController extends Controller
     public function createNewDs(Request $request)
     {
         // Validate form data
-        $validatedData = $request->validate([
+        $validatedDsData = $request->validate([
             'ds_code' => 'required|string|max:255',
             'ds_name' => 'required|string|max:255',
             'ds_contact_no' => 'required|string|max:20',
             'business_type' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'ds_address' => 'required|string|max:255',
             'province' => 'required|string|max:255',
             'region' => 'required|string|max:255',
             'town_city' => 'required|string|max:255',
@@ -100,41 +95,75 @@ class DSController extends Controller
             'ds_pic4' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'ds_pic5' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
-    
+
+        $validatedSettingData = $request->validate([
+            "validity_theoretical" => 'nullable',
+            "validity_practical" => 'nullable',
+            "validity_dep_cde" => 'nullable',
+            "validity_dep_drc" => 'nullable',
+            "lto_fee_theoretical" => 'nullable',
+            "lto_fee_practical" => 'nullable',
+            "lto_fee_dep_cde" => 'nullable',
+            "lto_fee_dep_drc" => 'nullable',
+            "cdbs_fee_theoretical" => 'nullable',
+            "cdbs_fee_practical" => 'nullable',
+            "cdbs_fee_dep_cde" => 'nullable',
+            "cdbs_fee_dep_drc" => 'nullable',
+            "it_fee_theoretical" => 'nullable',
+            "it_fee_practical" => 'nullable',
+            "it_fee_dep_cde" => 'nullable',
+            "it_fee_dep_drc" => 'nullable',
+            "others_fee_theoretical" => 'nullable',
+            "others_fee_practical" => 'nullable',
+            "others_fee_dep_cde" => 'nullable',
+            "others_fee_dep_drc" => 'nullable',
+            "mc_daily_upload_limit" => 'nullable',
+            "lv_daily_upload_limit" => 'nullable',
+            "weekly_upload_limit" => 'nullable',
+            "seating_capacity" => 'nullable',
+            "accredited_classroom_count" => 'nullable',
+            "percentage_allowable_seating_capacity" => 'nullable',
+            "number_unique_classes_per_days_per_tdc" => 'nullable',
+            "number_unique_classes_per_days_per_dep" => 'nullable',
+            "number_prescribed_days_per_instruction" => 'nullable',
+        ]);
+
+        //Address Handler
+        $cAdress = $request['town_city'] . ', ' . $request['region'] . ', ' . $request['province'];
+
         // Handle file uploads and store file paths
         $filePaths = [];
         foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $file) {
             if ($request->hasFile($file)) {
                 $filePaths[$file] = $request->file($file)->store('uploads', 'public');
+            } else {
+                $filePaths[$file] = null;
             }
         }
     
         // Prepare data for insertion
-        $data = array_merge(
-            $validatedData,
-            $filePaths
-        );
+        $data = array_merge($validatedDsData, $filePaths);
     
-        // Insert data into the database using DB facade
-        DB::table('tb_ds')->insert($data);
-    
-        // Return a JSON response
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Form submitted successfully',
-        //     'data' => $data,
-        // ]);
+        // Debug the data
+        // dd($data); // Ensure the data array contains file paths, not file objects
+            // Insert data into the database
+        DB::table('tb_ds')->insert(array_merge(['ds_address' => $cAdress], $data));
+        DB::table('tb_settings')->insert(array_merge(["ds_code" => $request['ds_code']], $validatedSettingData));
 
-        return redirect()->route('drivingSchool')->with('success', 'Driving School updated successfully.');
+        return redirect()->route('drivingSchool')->with('success', 'Driving School created successfully.');
+
     }
 
 
-    public function viewEditForm($ds_code) {
+
+    public function viewEditForm($ds_code) 
+    {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
         // $ds_code = 'DS_001';
         $selectedDs = DB::table('tb_ds')->where('ds_code', $ds_code)->first();
         $dsSetting = DB::table('tb_settings')->where('ds_code', $ds_code)->first();
+
   
         // Return the view with the fetched data
         return view('ds.updateForm', [
@@ -149,22 +178,21 @@ class DSController extends Controller
     public function updateDs(Request $request, $ds_code) 
     {
 
-        $request->validate([
+       $request->validate([
             'ds_code' => 'required|string|max:255',
             'ds_name' => 'required|string|max:255',
-            'ds_address' => 'required|string|max:255',
             'ds_contact_no' => 'required|string|max:20',
             'business_type' => 'required|string|max:255',
-            'dti_accreditation_no' => 'required|string|max:255',
-            'lto_accreditation_no' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'province' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'town_city' => 'required|string|max:255',
+            'dti_accreditation_no' => 'required|integer',
+            'lto_accreditation_no' => 'required|integer',
             'date_it_started' => 'required|date',
             'date_it_accredited' => 'required|date',
             'date_it_renewal' => 'required|date',
             'is_active' => 'required|boolean',
-            'description' => 'required|string|max:500',
-            'province' => 'required|string|max:255',
-            'region' => 'required|string|max:255',
-            'town_city' => 'required|string|max:255',
             'ds_fee_theoretical' => 'required|numeric',
             'ds_fee_practical' => 'required|numeric',
             'ds_fee_dep_cde' => 'required|numeric',
@@ -172,18 +200,18 @@ class DSController extends Controller
             'server_location' => 'required|string|max:255',
             'is_live' => 'required|boolean',
             'is_with_pos' => 'required|boolean',
-            'date_it_accreditation_renewal' => 'required|date',
-            'date_it_authorization_renewal' => 'required|date',
+            'date_it_accreditation_renewal' => 'nullable|date',
+            'date_it_authorization_renewal' => 'nullable|date',
+            'logo_big' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'logo_small' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'ds_pic1' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'ds_pic2' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'ds_pic3' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'ds_pic4' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'ds_pic5' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
 
-            // Image Uploads
-            'logo_big' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'logo_small' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'ds_pic1' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'ds_pic2' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'ds_pic3' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'ds_pic4' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'ds_pic5' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            //SETTINGS INPUT
+        $request->validate([
             "validity_theoretical" => 'required',
             "validity_practical" => 'required',
             "validity_dep_cde" => 'required',
@@ -214,22 +242,31 @@ class DSController extends Controller
             "number_unique_classes_per_days_per_dep" => 'required',
             "number_prescribed_days_per_instruction" => 'required',
         ]);
+    
+        // Handle file uploads and store file paths
         $filePaths = [];
-        $fileFields = ['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'];
-        
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
-                $filePaths[$field] = $request->file($field)->store('public/images');
+        foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $file) {
+            if ($request->hasFile($file)) {
+                $filePaths[$file] = $request->file($file)->store('uploads', 'public');
+            } else {
+                $filePaths[$file] = null;
             }
         }
+    
+        // Prepare data for insertion
+        // $data = array_merge(
+        //     $validatedDsData,
+        //     $filePaths,
+        // );
+        $cAdress = $request->input('town_city') . ', ' . $request->input('region') . ', ' . $request->input('province');
 
-        DB::transaction(function () use ($request, $ds_code, $filePaths) {
+        DB::transaction(function () use ($request, $ds_code, $cAdress, $filePaths) {
             DB::table('tb_ds')
                 ->where('ds_code', $ds_code)
                 ->update([
                     'ds_code' => $request->input('ds_code'),
                     'ds_name' => $request->input('ds_name'),
-                    'ds_address' => $request->input('ds_address'),
+                    'ds_address' => $cAdress,
                     'ds_contact_no' => $request->input('ds_contact_no'),
                     'business_type' => $request->input('business_type'),
                     'dti_accreditation_no' => $request->input('dti_accreditation_no'),
@@ -252,15 +289,13 @@ class DSController extends Controller
                     'date_it_accreditation_renewal' => $request->input('date_it_accreditation_renewal'),
                     'date_it_authorization_renewal' => $request->input('date_it_authorization_renewal'),
 
-                    'logo_big' => isset($filePaths['logo_big']) ? basename($filePaths['logo_big']) : null,
-                    'logo_small' => isset($filePaths['logo_small']) ? basename($filePaths['logo_small']) : null,
-                    'ds_pic1' => isset($filePaths['ds_pic1']) ? basename($filePaths['ds_pic1']) : null,
-                    'ds_pic2' => isset($filePaths['ds_pic2']) ? basename($filePaths['ds_pic2']) : null,
-                    'ds_pic3' => isset($filePaths['ds_pic3']) ? basename($filePaths['ds_pic3']) : null,
-                    'ds_pic4' => isset($filePaths['ds_pic4']) ? basename($filePaths['ds_pic4']) : null,
-                    'ds_pic5' => isset($filePaths['ds_pic5']) ? basename($filePaths['ds_pic5']) : null,
-    
-                     
+                    'logo_big' => $filePaths['logo_big'],
+                    'logo_small' => $filePaths['logo_small'],
+                    'ds_pic1' => $filePaths['ds_pic1'],
+                    'ds_pic2' => $filePaths['ds_pic2'],
+                    'ds_pic3' => $filePaths['ds_pic3'],
+                    'ds_pic4' => $filePaths['ds_pic4'],
+                    'ds_pic5' => $filePaths['ds_pic5'],
                 ]);
         
             DB::table('tb_settings')
@@ -302,7 +337,7 @@ class DSController extends Controller
 
         return redirect()->route('drivingSchool')->with('success', 'Driving School updated successfully.');
         // return dd($request);
-}
+    }
 
 
     public function deleteDs($ds_code) {

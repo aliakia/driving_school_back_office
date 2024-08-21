@@ -9,15 +9,12 @@ use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     public function index() {
-        $loggedUser = session('logged_in');
-        // $first_name = $loggedUser->first_name;
         $pageConfigs = [
             'myLayout' => 'blank'
           ];
 
           return view('auth.login', [
             'pageConfigs' => $pageConfigs,
-            // 'first_name' => $first_name,
           ]);
         // return view('auth.login');
     }
@@ -60,7 +57,7 @@ class AuthController extends Controller
         }
     
         $request->session()->put('logged_in', $user);
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('drivingSchool'));
     }
 
     public function logout(Request $request)
