@@ -67,7 +67,7 @@
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <img src="asset('assets/img/harkonnen_logo.png') }}" alt
+                                    <img src="{{ asset('assets/img/harkonnen_logo.png') }}" alt
                                         class="h-auto rounded-circle">
                                 </div>
                             </div>

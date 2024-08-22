@@ -27,7 +27,6 @@
 
 @section('page-script')
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
-    <script src="{{ asset('assets/js/scripts/login.js') }}"></script>
 @endsection
 
 @section('content')
@@ -74,8 +73,7 @@
                     <h3 class="mb-1 fw-bold h1">Welcome!</h3>
                     <p class="mb-4">Please sign-in to your account</p>
 
-                    <form id="formLogin" class="mb-3" method="POST" action="{{ route('loginAccount') }}"
-                        id="login_form">
+                    <form id="formLogin" class="mb-3" method="POST" action="{{ route('loginAccount') }}" id="login_form">
                         @csrf
                         <div class="mb-3">
                             <label for="user_id" class="form-label">User Id</label>

@@ -7,20 +7,22 @@ use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 
+ // Route to return the Blade view
 
-
-Route::middleware(['auth.check'])->group(function(){
-    Route::get('/', [DSHomeController::class, 'index'])->name('dashboard');
-
-
-    // Driving School Routes
-    Route::prefix('driving-school')->group(function() {
+ // Route to return JSON data
+ 
+ Route::middleware(['auth.check'])->group(function(){
+     
+     // Driving School Routes
+     Route::prefix('driving-school')->group(function() {
+        Route::get('/data', [DSController::class, 'fetchData'])->name('dsDataUrl');
+               
         Route::get('/', [DSController::class, 'index'])->name('drivingSchool');
         Route::get('/create', [DSController::class, 'viewCreateForm'])->name('viewCreateForm');
-        Route::post('/ds', [DSController::class, 'createNewDs'])->name('submitDS');
-        Route::get('/ds/{ds_code}', [DSController::class, 'viewEditForm'])->name('viewEditForm');
-        Route::put('/ds/{ds_code}/edit', [DSController::class, 'updateDs'])->name('updateDs');
-        Route::delete('/ds/{ds_code}/delete', [DSController::class, 'deleteDs'])->name('deleteDs');
+        Route::post('/', [DSController::class, 'createNewDs'])->name('submitDS');
+        Route::get('/{ds_code}', [DSController::class, 'viewEditForm'])->name('viewEditForm');
+        Route::put('/{ds_code}/edit', [DSController::class, 'updateDs'])->name('updateDs');
+        Route::delete('/{ds_code}/delete', [DSController::class, 'deleteDs'])->name('deleteDs');
     });
 
 
@@ -38,9 +40,3 @@ Route::prefix('auth')->group(function() {
     });
     Route::post('/logout', [AuthController::class, 'logout'])->name('logoutAccount');
 });
-
-Route::get('/test', function() {
-    return view('ds.test');
-});
-
-Route::post('/test', [DSController::class, 'upload'])->name('upload');

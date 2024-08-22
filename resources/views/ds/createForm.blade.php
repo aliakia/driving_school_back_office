@@ -16,17 +16,6 @@
 @section('title', 'DS List')
 
 @section('content')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-
 
     {{-- DS FORM --}}
     <div class="row">
@@ -337,14 +326,13 @@
                                     <div class="form-group">
                                         <label class="form-label" for="logo_big">LOGO BIG</label>
                                         <div class="me-2 mb2">
-                                            <input name="file" type="file" name="logo_big" id="logo_big"
-                                                class="form-control" />
+                                            <input type="file" name="logo_big" id="logo_big" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="logo_small">LOGO SMALL</label>
                                         <div class="me-2 mb2">
-                                            <input name="file" type="file" name="logo_small" id="logo_small"
+                                            <input type="file" name="logo_small" id="logo_small"
                                                 class="form-control" />
                                         </div>
                                     </div>
@@ -784,6 +772,9 @@
                     console.error('Error:', error);
                     alert('An error occurred: ' + error.message);
                 });
+
+            console.log(response.json());
+
         }
     </script>
 @endsection

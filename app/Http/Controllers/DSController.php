@@ -5,52 +5,33 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class DSController extends Controller
 {
-    public function showImages()
-{
-    $images = DB::table('your_table')
-                ->select('id', DB::raw("encode(your_bytea_column, 'base64') as image_base64"))
-                ->get();
-
-    return view('images.view', ['images' => $images]);
-}
-
+    public function fetchData() {
+        $dsData = DB::table('tb_ds')->select('ds_code', 'ds_name', 'is_active')->get();
+        return response()->json([
+            'data' => $dsData
+        ]);
+    }
     
-public function index() {
-    $loggedUser = session('logged_in');
-    $first_name = $loggedUser->first_name;
-    
-    // Fetch all records with Base64 encoded images
-    $all_ds = DB::table('tb_ds')
-                ->select(
+    public function index() {
+        $loggedUser = session('logged_in');
+        $first_name = $loggedUser->first_name;
+
+
+        $all_ds = DB::table('tb_ds')
+                    ->select(
                     'ds_code',
                     'ds_name',
                     'is_active',
-                    DB::raw("encode(logo_big, 'base64') as logo_big_base64"),
-                    DB::raw("encode(logo_small, 'base64') as logo_small_base64"),
-                    DB::raw("encode(ds_pic1, 'base64') as ds_pic1_base64"),
-                    DB::raw("encode(ds_pic2, 'base64') as ds_pic2_base64"),
-                    DB::raw("encode(ds_pic3, 'base64') as ds_pic3_base64"),
-                    DB::raw("encode(ds_pic4, 'base64') as ds_pic4_base64"),
-                    DB::raw("encode(ds_pic5, 'base64') as ds_pic5_base64"),
-                )
-                ->get();
+                    )->get();
 
-    // foreach ($all_ds as $ds) {
-    //     dd($ds->logo_small_base64);
-    // }
-
-    return view('ds.viewList', [
-        'all_ds' => $all_ds,
-        'first_name' => $first_name,
-    ]);
-}
-
-    
-    
+        return view('ds.viewList', [
+            'all_ds' => $all_ds,
+            'first_name' => $first_name,
+        ]);
+    }
 
     public function viewCreateForm() {
         $loggedUser = session('logged_in');
@@ -87,6 +68,7 @@ public function index() {
             'is_with_pos' => 'required|boolean',
             'date_it_accreditation_renewal' => 'nullable|date',
             'date_it_authorization_renewal' => 'nullable|date',
+
             'logo_big' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'logo_small' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'ds_pic1' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
@@ -140,6 +122,7 @@ public function index() {
                 $filePaths[$file] = null;
             }
         }
+
     
         // Prepare data for insertion
         $data = array_merge($validatedDsData, $filePaths);
@@ -253,11 +236,6 @@ public function index() {
             }
         }
     
-        // Prepare data for insertion
-        // $data = array_merge(
-        //     $validatedDsData,
-        //     $filePaths,
-        // );
         $cAdress = $request->input('town_city') . ', ' . $request->input('region') . ', ' . $request->input('province');
 
         DB::transaction(function () use ($request, $ds_code, $cAdress, $filePaths) {
