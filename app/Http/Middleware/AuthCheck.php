@@ -18,7 +18,7 @@ class AuthCheck
     {
         if (!$request->session()->has('logged_in')) {
             // If not logged in, redirect to the login page
-            return redirect()->route('login'); // Adjust this route name as needed
+            return redirect()->route('login');
         }
         return $next($request);
     }

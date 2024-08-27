@@ -16,8 +16,8 @@ class UserLoggedIn
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->session()->has('logged_in')) {
-            // Redirect to a different page if the user is already logged in
-            return redirect()->route('dashboard'); // Adjust the route name as needed
+            // Redirect to a homepage if the user is already logged in
+            return redirect()->route('drivingSchool');
         }
         return $next($request);
     }

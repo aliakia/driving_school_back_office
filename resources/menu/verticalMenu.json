@@ -1,15 +1,6 @@
 {
   "menu": [
     {
-      "name": "Dashboards",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "dashboard",
-      "url": "/"
-    },
-    {
-      "menuHeader": "Apps & Pages"
-    },
-    {
       "url": "/driving-school",
       "name": "Driving School",
       "icon": "menu-icon tf-icons ti ti-text-wrap-disabled",

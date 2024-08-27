@@ -22,7 +22,7 @@ class Helpers
       'myRTLMode' => true,
       'hasCustomizer' => true,
       'showDropdownOnHover' => true,
-      'displayCustomizer' => true,
+      'displayCustomizer' => false,
       'menuFixed' => true,
       'menuCollapsed' => false,
       'navbarFixed' => true,

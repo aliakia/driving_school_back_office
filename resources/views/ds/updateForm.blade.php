@@ -364,27 +364,27 @@
                                     <div class="form-group">
                                         <div class="d-flex flex-wrap">
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic1">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic1">DS PICTURE 1</label>
                                                 <input type="file" name="ds_pic1" id="ds_pic1"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic2">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic2">DS PICTURE 2</label>
                                                 <input type="file" name="ds_pic2" id="ds_pic2"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic3">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic3">DS PICTURE 3</label>
                                                 <input type="file" name="ds_pic3" id="ds_pic3"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic4">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic4">DS PICTURE 4</label>
                                                 <input type="file" name="ds_pic4" id="ds_pic4"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic5">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic5">DS PICTURE 5</label>
                                                 <input type="file" name="ds_pic5" id="ds_pic5"
                                                     class="form-control" />
                                             </div>

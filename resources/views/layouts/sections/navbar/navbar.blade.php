@@ -40,17 +40,19 @@
     @if (!isset($menuHorizontal))
         <!-- Search -->
         <div class="navbar-nav align-items-center">
-            <div class="nav-item navbar-search-wrapper mb-0">
-                <a class="nav-item nav-link search-toggler d-flex align-items-center px-0" href="javascript:void(0);">
-                    <i class="ti ti-search ti-md me-2"></i>
-                    <span class="d-none d-md-inline-block text-muted">Search (Ctrl+/)</span>
-                </a>
+            <div class="nav-item navbar-search-wrapper mb-0 fw-bold">
+                Driving School Module
             </div>
         </div>
         <!-- /Search -->
     @endif
     <ul class="navbar-nav flex-row align-items-center ms-auto">
-
+        <li class="nav-item text-end">
+            <small class="fw-semibold d-block">
+                {{ $first_name }}
+            </small>
+            <small class="text-muted">Admin</small>
+        </li>
 
         <!-- User -->
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -61,7 +63,7 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li>
+                {{-- <li>
                     <a class="dropdown-item"
                         href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
                         <div class="d-flex">
@@ -79,10 +81,7 @@
                             </div>
                         </div>
                     </a>
-                </li>
-                <li>
-                    <div class="dropdown-divider"></div>
-                </li>
+                </li> --}}
 
                 <li>
 

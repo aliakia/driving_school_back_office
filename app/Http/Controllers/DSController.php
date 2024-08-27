@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class DSController extends Controller
 {
+    //Fetch data as JSON from DB to use in Index
     public function fetchData() {
         $dsData = DB::table('tb_ds')->select('ds_code', 'ds_name', 'is_active')->get();
         return response()->json([
@@ -36,14 +37,13 @@ class DSController extends Controller
     public function viewCreateForm() {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
-        return view('ds.createForm', [
+        return view('ds.createDSForm', [
             'first_name' => $first_name,
         ]);
     }
 
     public function createNewDs(Request $request)
     {
-        // Validate form data
         $validatedDsData = $request->validate([
             'ds_code' => 'required|string|max:255',
             'ds_name' => 'required|string|max:255',
@@ -113,7 +113,7 @@ class DSController extends Controller
         //Address Handler
         $cAdress = $request['town_city'] . ', ' . $request['region'] . ', ' . $request['province'];
 
-        // Handle file uploads and store file paths
+        //Handle file uploads and store file paths
         $filePaths = [];
         foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $file) {
             if ($request->hasFile($file)) {
@@ -123,21 +123,16 @@ class DSController extends Controller
             }
         }
 
-    
-        // Prepare data for insertion
         $data = array_merge($validatedDsData, $filePaths);
     
-        // Debug the data
-        // dd($data); // Ensure the data array contains file paths, not file objects
-            // Insert data into the database
+        // dd($data);
+        
         DB::table('tb_ds')->insert(array_merge(['ds_address' => $cAdress], $data));
         DB::table('tb_settings')->insert(array_merge(["ds_code" => $request['ds_code']], $validatedSettingData));
 
         return redirect()->route('drivingSchool')->with('success', 'Driving School created successfully.');
 
     }
-
-
 
     public function viewEditForm($ds_code) 
     {
@@ -148,14 +143,13 @@ class DSController extends Controller
         $dsSetting = DB::table('tb_settings')->where('ds_code', $ds_code)->first();
 
   
-        // Return the view with the fetched data
-        return view('ds.updateForm', [
+        return view('ds.updateDSForm', [
             'selectedDs' => $selectedDs,
             'dsSetting' => $dsSetting,
             'first_name' => $first_name,
         ]);
 
-        // return dd($selectedDs);
+        //return dd($selectedDs);
     }
 
     public function updateDs(Request $request, $ds_code) 
@@ -226,7 +220,7 @@ class DSController extends Controller
             "number_prescribed_days_per_instruction" => 'required',
         ]);
     
-        // Handle file uploads and store file paths
+        //Handle file uploads and store file paths
         $filePaths = [];
         foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $file) {
             if ($request->hasFile($file)) {
@@ -236,6 +230,7 @@ class DSController extends Controller
             }
         }
     
+        //Address Handler
         $cAdress = $request->input('town_city') . ', ' . $request->input('region') . ', ' . $request->input('province');
 
         DB::transaction(function () use ($request, $ds_code, $cAdress, $filePaths) {

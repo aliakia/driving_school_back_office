@@ -6,11 +6,13 @@
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/dropzone/dropzone.css') }}" />
 @endsection
 
 @section('vendor-script')
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/dropzone/dropzone.js') }}"></script>
 @endsection
 
 @section('title', 'DS List')
@@ -339,30 +341,46 @@
                                 </div>
 
                                 <div class="col-12 col-md-12 col-lg-7 mb-3">
+                                    {{-- <div class="card">
+                                        <h5 class="card-header">Multiple</h5>
+                                        <div class="card-body">
+                                            <form action="/upload" class="dropzone needsclick" id="dropzone-multi">
+                                                <div class="dz-message needsclick">
+                                                    Drop files here or click to upload
+                                                    <span class="note needsclick">(This is just a demo dropzone. Selected
+                                                        files are
+                                                        <strong>not</strong> actually uploaded.)</span>
+                                                </div>
+                                                <div class="fallback">
+                                                    <input name="file" type="file" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div> --}}
                                     <div class="form-group">
                                         <div class="d-flex flex-wrap">
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic1">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic1">DS PICTURE 1</label>
                                                 <input type="file" name="ds_pic1" id="ds_pic1"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic2">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic2">DS PICTURE 2</label>
                                                 <input type="file" name="ds_pic2" id="ds_pic2"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic3">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic3">DS PICTURE 3</label>
                                                 <input type="file" name="ds_pic3" id="ds_pic3"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic4">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic4">DS PICTURE 4</label>
                                                 <input type="file" name="ds_pic4" id="ds_pic4"
                                                     class="form-control" />
                                             </div>
                                             <div class="me-2 mb-2">
-                                                <label class="form-label" for="ds_pic5">DS PICTURES</label>
+                                                <label class="form-label" for="ds_pic5">DS PICTURE 5</label>
                                                 <input type="file" name="ds_pic5" id="ds_pic5"
                                                     class="form-control" />
                                             </div>
@@ -760,18 +778,18 @@
                     }
                     return response.json();
                 })
-                .then(data => {
-                    if (data.success) {
-                        alert('Form submitted successfully');
-                        window.location.href = '{{ url('/') }}'; // Redirect to homepage
-                    } else {
-                        alert('Submission failed: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred: ' + error.message);
-                });
+            // .then(data => {
+            //     if (data.success) {
+            //         alert('Form submitted successfully');
+            //         window.location.href = '{{ url('/') }}'; // Redirect to homepage
+            //     } else {
+            //         alert('Submission failed: ' + data.message);
+            //     }
+            // })
+            // .catch(error => {
+            //     console.error('Error:', error);
+            //     alert('An error occurred: ' + error.message);
+            // });
 
             console.log(response.json());
 

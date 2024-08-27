@@ -8,22 +8,21 @@
     @if (!isset($navbarFull))
         <div class="app-brand demo">
             <div class="align-middle">
-                <a href="{{ url('/') }}" class="app-brand-link">
+                <a href="{{ route('drivingSchool') }}" class="app-brand-link">
 
                     <span class="avatar">
                         <img class="h-auto rounded-circle" src="{{ asset('assets/img/lto_logo.png') }}">
                     </span>
-                    <span class="app-brand-text demo menu-text fw-bold">{{ config('variables.templateName') }}</span>
+                    {{-- <span class="app-brand-text demo menu-text fw-bold">{{ config('variables.templateName') }}</span> --}}
                 </a>
             </div>
 
-            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+            {{-- <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
                 <i class="ti menu-toggle-icon d-none d-xl-block ti-sm align-middle"></i>
                 <i class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
-            </a>
+            </a> --}}
         </div>
     @endif
-
 
     <div class="menu-inner-shadow"></div>
 
