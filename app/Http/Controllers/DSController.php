@@ -37,13 +37,12 @@ class DSController extends Controller
     public function viewCreateForm() {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
-        return view('ds.createDSForm', [
+        return view('ds.createNewDSForm', [
             'first_name' => $first_name,
         ]);
     }
 
-    public function createNewDs(Request $request)
-    {
+    public function createNewDs(Request $request) {
         $validatedDsData = $request->validate([
             'ds_code' => 'required|string|max:255',
             'ds_name' => 'required|string|max:255',
@@ -134,8 +133,7 @@ class DSController extends Controller
 
     }
 
-    public function viewEditForm($ds_code) 
-    {
+    public function viewEditForm($ds_code) {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
         // $ds_code = 'DS_001';
@@ -274,7 +272,7 @@ class DSController extends Controller
             DB::table('tb_settings')
                 ->where('ds_code', $ds_code)
                     ->update([
-                        "ds_code" => $ds_code,
+                        "ds_code" => $request->input('ds_code'),
                         "validity_theoretical" => $request->input('validity_theoretical'),
                         "validity_practical" => $request->input('validity_practical'),
                         "validity_dep_cde" => $request->input('validity_dep_cde'),

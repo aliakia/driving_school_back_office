@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  // Initialize select2 and flatpickr
   const select2 = $('.select2'),
     basicPickr = $('.flatpickr-date'),
     selectPicker = $('.selectpicker');
@@ -25,19 +24,77 @@
     });
   }
 
-  // Wizard Validation
-  // --------------------------------------------------------------------
+  function updatePreview(id, value) {
+    const previewElement = document.getElementById('preview-' + id);
+
+    if (!previewElement) {
+      return;
+    }
+
+    let displayValue;
+
+    switch (id) {
+      case 'is_active':
+        displayValue = value == 1 ? 'Active' : 'Inactive';
+        break;
+      case 'is_with_pos':
+        displayValue = value == 1 ? 'With POS' : 'Without POS';
+        break;
+      case 'is_live':
+        displayValue = value == 1 ? 'Live' : 'Not Live';
+        break;
+      default:
+        displayValue = value;
+        break;
+    }
+
+    previewElement.textContent = displayValue;
+  }
+
+  const inputs = document.querySelectorAll('#wizard-validation-form input');
+  const selects = document.querySelectorAll('#wizard-validation-form select');
+  const textarea = document.querySelectorAll('#wizard-validation-form textarea');
+
+  const inputToCap = document.querySelectorAll('#ds_name', '#ds_code');
+
+  window.addEventListener('change', () => {
+    inputToCap.forEach(input => {
+      input.value = input.value.toUpperCase();
+    });
+  });
+
+  document.querySelectorAll('.auto-caps').forEach(input => {
+    input.addEventListener('input', function () {
+      this.value = this.value.toUpperCase();
+    });
+  });
+
+  window.addEventListener('change', () => {
+    inputs.forEach(input => {
+      updatePreview(input.id, input.value);
+    });
+  });
+  window.addEventListener('change', () => {
+    textarea.forEach(textarea => {
+      updatePreview(textarea.id, textarea.value);
+    });
+  });
+
+  window.addEventListener('click', () => {
+    selects.forEach(select => {
+      updatePreview(select.id, select.value);
+    });
+  });
+
   const wizardValidation = document.querySelector('#wizard-validation');
   if (typeof wizardValidation !== undefined && wizardValidation !== null) {
-    // Wizard form
     const wizardValidationForm = wizardValidation.querySelector('#wizard-validation-form');
-    // Wizard steps
     const wizardValidationFormStep1 = wizardValidationForm.querySelector('#ds-details-validation');
     const wizardValidationFormStep2 = wizardValidationForm.querySelector('#fees-validation');
     const wizardValidationFormStep3 = wizardValidationForm.querySelector('#it-validation');
     const wizardValidationFormStep4 = wizardValidationForm.querySelector('#images-validation');
     const wizardValidationFormStep5 = wizardValidationForm.querySelector('#settings-validation');
-    // Wizard next prev button
+    const wizardValidationFormStep6 = wizardValidationForm.querySelector('#review-submit');
     const wizardValidationNext = [].slice.call(wizardValidationForm.querySelectorAll('.btn-next'));
     const wizardValidationPrev = [].slice.call(wizardValidationForm.querySelectorAll('.btn-prev'));
 
@@ -45,7 +102,7 @@
       linear: true
     });
 
-    // ds details
+    // DS Details Validation
     const FormValidation1 = FormValidation.formValidation(wizardValidationFormStep1, {
       fields: {
         ds_name: {
@@ -67,11 +124,11 @@
         ds_contact_no: {
           validators: {
             notEmpty: {
-              message: 'The Phone Number is required'
+              message: 'The Contact Number is required'
             },
             regexp: {
-              regexp: /^[0-9]{11}$/,
-              message: 'The Phone Number must be 11 digits and must only contain numbers'
+              regexp: /^[0-9\- ]+$/,
+              message: 'Invalid Format'
             }
           }
         },
@@ -82,14 +139,17 @@
             }
           }
         },
+        ds_code: {
+          validators: {
+            notEmpty: {
+              message: 'The Driving School Code is required'
+            }
+          }
+        },
         dti_accreditation_no: {
           validators: {
             notEmpty: {
               message: 'The DTI Accreditation Number is required'
-            },
-            regexp: {
-              regexp: /^[0-9]+$/,
-              message: 'The DTI Accreditation Number must only contain numbers'
             }
           }
         },
@@ -97,10 +157,6 @@
           validators: {
             notEmpty: {
               message: 'The LTO Accreditation Number is required'
-            },
-            regexp: {
-              regexp: /^[0-9]+$/,
-              message: 'The LTO Accreditation Number must only contain numbers'
             }
           }
         },
@@ -130,7 +186,7 @@
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
-          rowSelector: '.col-sm-6'
+          rowSelector: '.col-12'
         }),
         autoFocus: new FormValidation.plugins.AutoFocus(),
         submitButton: new FormValidation.plugins.SubmitButton()
@@ -146,34 +202,146 @@
       validationStepper.next();
     });
 
-    // Fees info
+    // Fees Info Validation
     const FormValidation2 = FormValidation.formValidation(wizardValidationFormStep2, {
       fields: {
-        formValidationFirstName: {
+        ds_fee_theoretical: {
           validators: {
             notEmpty: {
-              message: 'The first name is required'
+              message: 'This field is required'
             }
           }
         },
-        formValidationLastName: {
+        ds_fee_practical: {
           validators: {
             notEmpty: {
-              message: 'The last name is required'
+              message: 'This field is required'
             }
           }
         },
-        formValidationCountry: {
+        ds_fee_dep_cde: {
           validators: {
             notEmpty: {
-              message: 'The Country is required'
+              message: 'This field is required'
             }
           }
         },
-        formValidationLanguage: {
+        ds_fee_dep_drc: {
           validators: {
             notEmpty: {
-              message: 'The Languages are required'
+              message: 'This field is required'
+            }
+          }
+        },
+        lto_fee_theoretical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        lto_fee_practical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        lto_fee_dep_cde: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        lto_fee_dep_drc: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        cdbs_fee_theoretical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        cdbs_fee_practical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        cdbs_fee_dep_cde: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        cdbs_fee_dep_drc: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        it_fee_theoretical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        it_fee_practical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        it_fee_dep_cde: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        it_fee_dep_drc: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        others_fee_theoretical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        others_fee_practical: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        others_fee_dep_cde: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        others_fee_dep_drc: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
             }
           }
         }
@@ -182,7 +350,7 @@
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
-          rowSelector: '.col-sm-6'
+          rowSelector: '.col-12'
         }),
         autoFocus: new FormValidation.plugins.AutoFocus(),
         submitButton: new FormValidation.plugins.SubmitButton()
@@ -191,72 +359,69 @@
       validationStepper.next();
     });
 
-    // Bootstrap Select (i.e Language select)
-    if (selectPicker.length) {
-      selectPicker.each(function () {
-        var $this = $(this);
-        $this.selectpicker().on('change', function () {
-          FormValidation2.revalidateField('formValidationLanguage');
-        });
-      });
-    }
-
-    // select2
-    if (select2.length) {
-      select2.each(function () {
-        var $this = $(this);
-        $this.wrap('<div class="position-relative"></div>');
-        $this
-          .select2({
-            placeholder: 'Select a country',
-            dropdownParent: $this.parent()
-          })
-          .on('change.select2', function () {
-            FormValidation2.revalidateField('formValidationCountry');
-          });
-      });
-    }
-
-    // Social links
+    // IT
     const FormValidation3 = FormValidation.formValidation(wizardValidationFormStep3, {
       fields: {
-        formValidationTwitter: {
+        is_active: {
           validators: {
             notEmpty: {
-              message: 'The Twitter URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
+              message: 'This field is required'
             }
           }
         },
-        formValidationFacebook: {
+        server_location: {
           validators: {
             notEmpty: {
-              message: 'The Facebook URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
+              message: 'This field is required'
             }
           }
         },
-        formValidationGoogle: {
+        is_live: {
           validators: {
             notEmpty: {
-              message: 'The Google URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
+              message: 'This field is required'
             }
           }
         },
-        formValidationLinkedIn: {
+        is_with_pos: {
           validators: {
             notEmpty: {
-              message: 'The LinkedIn URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
+              message: 'This field is required'
+            }
+          }
+        },
+        date_it_started: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        date_it_renewal: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        date_it_authorization_renewal: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        date_it_accredited: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        date_it_accreditation_renewal: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
             }
           }
         }
@@ -265,18 +430,135 @@
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
-          rowSelector: '.col-sm-6'
+          rowSelector: '.col-12'
         }),
         autoFocus: new FormValidation.plugins.AutoFocus(),
         submitButton: new FormValidation.plugins.SubmitButton()
       }
     }).on('core.form.valid', function () {
-      alert('Submitted..!!');
+      validationStepper.next();
+    });
+
+    //Images
+    const FormValidation4 = FormValidation.formValidation(wizardValidationFormStep4, {
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: '.col-12'
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }).on('core.form.valid', function () {
+      validationStepper.next();
+    });
+
+    //Settings Validation
+    const FormValidation5 = FormValidation.formValidation(wizardValidationFormStep5, {
+      fields: {
+        mc_daily_upload_limit: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        lv_daily_upload_limit: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        weekly_upload_limit: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        seating_capacity: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        number_unique_classes_per_days_per_tdc: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        number_unique_classes_per_days_per_dep: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        number_prescribed_days_per_instruction: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        accredited_classroom_count: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        percentage_allowable_seating_capacity: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: '.col-12'
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }).on('core.form.valid', function () {
+      validationStepper.next();
+    });
+
+    const FormValidation6 = FormValidation.formValidation(wizardValidationFormStep6, {
+      fields: {
+        checkBox: {
+          validators: {
+            notEmpty: {
+              message: 'Check the box if all info is correct. Go back if not.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: '.col-12'
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }).on('core.form.valid', function () {
+      window.location.href = homeUrl;
     });
 
     wizardValidationNext.forEach(item => {
       item.addEventListener('click', event => {
-        // When click the Next button, we will validate the current step
         switch (validationStepper._currentIndex) {
           case 0:
             FormValidation1.validate();
@@ -288,6 +570,15 @@
 
           case 2:
             FormValidation3.validate();
+            break;
+          case 3:
+            FormValidation4.validate();
+            break;
+          case 4:
+            FormValidation5.validate();
+            break;
+          case 5:
+            FormValidation6.validate();
             break;
 
           default:

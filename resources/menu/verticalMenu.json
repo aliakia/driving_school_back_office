@@ -5,6 +5,12 @@
       "name": "Driving School",
       "icon": "menu-icon tf-icons ti ti-text-wrap-disabled",
       "slug": "app-email"
+    },
+    {
+      "url": "/driving-school",
+      "name": "Accounts",
+      "icon": "menu-icon tf-icons ti ti-text-wrap-disabled",
+      "slug": "app-email"
     }
   ]
 }

@@ -41,18 +41,18 @@
         <!-- Search -->
         <div class="navbar-nav align-items-center">
             <div class="nav-item navbar-search-wrapper mb-0 fw-bold">
-                Driving School Module
+                Driving School Back Office Module
             </div>
         </div>
         <!-- /Search -->
     @endif
     <ul class="navbar-nav flex-row align-items-center ms-auto">
-        <li class="nav-item text-end">
+        {{-- <li class="nav-item text-end">
             <small class="fw-semibold d-block">
                 {{ $first_name }}
             </small>
             <small class="text-muted">Admin</small>
-        </li>
+        </li> --}}
 
         <!-- User -->
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -63,9 +63,8 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                {{-- <li>
-                    <a class="dropdown-item"
-                        href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
+                <li>
+                    <a class="dropdown-item">
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
@@ -81,7 +80,7 @@
                             </div>
                         </div>
                     </a>
-                </li> --}}
+                </li>
 
                 <li>
 

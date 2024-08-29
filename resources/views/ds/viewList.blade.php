@@ -1,3 +1,7 @@
+@php
+    $configData = Helper::appClasses();
+@endphp
+
 @extends('layouts/layoutMaster')
 
 @section('title', 'Home')
@@ -33,7 +37,6 @@
 
 @section('content')
 
-    <!-- DataTable with Buttons -->
     <div class="card">
         <div class="card-datatable table-responsive pt-0">
             <table class="datatables-basic table">
