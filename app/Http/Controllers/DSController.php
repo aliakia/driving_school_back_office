@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class DSController extends Controller
 {
@@ -125,11 +125,21 @@ class DSController extends Controller
         $data = array_merge($validatedDsData, $filePaths);
     
         // dd($data);
-        
-        DB::table('tb_ds')->insert(array_merge(['ds_address' => $cAdress], $data));
-        DB::table('tb_settings')->insert(array_merge(["ds_code" => $request['ds_code']], $validatedSettingData));
 
-        return redirect()->route('drivingSchool')->with('success', 'Driving School created successfully.');
+        try {
+            DB::beginTransaction();
+        
+            DB::table('tb_ds')->insert(array_merge(['ds_address' => $cAdress], $data));
+            DB::table('tb_settings')->insert(array_merge(["ds_code" => $request['ds_code']], $validatedSettingData));
+            DB::commit();
+            return redirect()->route('drivingSchool')->with('success', 'Driving School created successfully.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('viewCreateForm')->with('error', 'There was an error creating driving school.');
+        }
+
+       
+
 
     }
 
@@ -232,82 +242,94 @@ class DSController extends Controller
         $cAdress = $request->input('town_city') . ', ' . $request->input('region') . ', ' . $request->input('province');
 
         DB::transaction(function () use ($request, $ds_code, $cAdress, $filePaths) {
-            DB::table('tb_ds')
-                ->where('ds_code', $ds_code)
-                ->update([
-                    'ds_code' => $request->input('ds_code'),
-                    'ds_name' => $request->input('ds_name'),
-                    'ds_address' => $cAdress,
-                    'ds_contact_no' => $request->input('ds_contact_no'),
-                    'business_type' => $request->input('business_type'),
-                    'dti_accreditation_no' => $request->input('dti_accreditation_no'),
-                    'lto_accreditation_no' => $request->input('lto_accreditation_no'),
-                    'date_it_started' => $request->input('date_it_started'),
-                    'date_it_accredited' => $request->input('date_it_accredited'),
-                    'date_it_renewal' => $request->input('date_it_renewal'),
-                    'is_active' => $request->input('is_active'),
-                    'description' => $request->input('description'),
-                    'province' => $request->input('province'),
-                    'region' => $request->input('region'),
-                    'town_city' => $request->input('town_city'),
-                    'ds_fee_theoretical' => $request->input('ds_fee_theoretical'),
-                    'ds_fee_practical' => $request->input('ds_fee_practical'),
-                    'ds_fee_dep_cde' => $request->input('ds_fee_dep_cde'),
-                    'ds_fee_dep_drc' => $request->input('ds_fee_dep_drc'),
-                    'server_location' => $request->input('server_location'),
-                    'is_live' => $request->input('is_live'),
-                    'is_with_pos' => $request->input('is_with_pos'),
-                    'date_it_accreditation_renewal' => $request->input('date_it_accreditation_renewal'),
-                    'date_it_authorization_renewal' => $request->input('date_it_authorization_renewal'),
 
-                    'logo_big' => $filePaths['logo_big'],
-                    'logo_small' => $filePaths['logo_small'],
-                    'ds_pic1' => $filePaths['ds_pic1'],
-                    'ds_pic2' => $filePaths['ds_pic2'],
-                    'ds_pic3' => $filePaths['ds_pic3'],
-                    'ds_pic4' => $filePaths['ds_pic4'],
-                    'ds_pic5' => $filePaths['ds_pic5'],
-                ]);
-        
-            DB::table('tb_settings')
-                ->where('ds_code', $ds_code)
+            try {
+                DB::beginTransaction();
+                DB::table('tb_ds')
+                    ->where('ds_code', $ds_code)
                     ->update([
-                        "ds_code" => $request->input('ds_code'),
-                        "validity_theoretical" => $request->input('validity_theoretical'),
-                        "validity_practical" => $request->input('validity_practical'),
-                        "validity_dep_cde" => $request->input('validity_dep_cde'),
-                        "validity_dep_drc" => $request->input('validity_dep_drc'),
-                        "lto_fee_theoretical" => $request->input('lto_fee_theoretical'),
-                        "lto_fee_practical" => $request->input('lto_fee_practical'),
-                        "lto_fee_dep_cde" => $request->input('lto_fee_dep_cde'),
-                        "lto_fee_dep_drc" => $request->input('lto_fee_dep_drc'),
-                        "cdbs_fee_theoretical" => $request->input('cdbs_fee_theoretical'),
-                        "cdbs_fee_practical" => $request->input('cdbs_fee_practical'),
-                        "cdbs_fee_dep_cde" => $request->input('cdbs_fee_dep_cde'),
-                        "cdbs_fee_dep_drc" => $request->input('cdbs_fee_dep_drc'),
-                        "it_fee_theoretical" => $request->input('it_fee_theoretical'),
-                        "it_fee_practical" => $request->input('it_fee_practical'),
-                        "it_fee_dep_cde" => $request->input('it_fee_dep_cde'),
-                        "it_fee_dep_drc" => $request->input('it_fee_dep_drc'),
-                        "others_fee_theoretical" => $request->input('others_fee_theoretical'),
-                        "others_fee_practical" => $request->input('others_fee_practical'),
-                        "others_fee_dep_cde" => $request->input('others_fee_dep_cde'),
-                        "others_fee_dep_drc" => $request->input('others_fee_dep_drc'),
-                        "mc_daily_upload_limit" => $request->input('mc_daily_upload_limit'),
-                        "lv_daily_upload_limit" => $request->input('lv_daily_upload_limit'),
-                        "weekly_upload_limit" => $request->input('weekly_upload_limit'),
-                        "seating_capacity" => $request->input('seating_capacity'),
-                        "accredited_classroom_count" => $request->input('accredited_classroom_count'),
-                        "percentage_allowable_seating_capacity" => $request->input('percentage_allowable_seating_capacity'),
-                        "number_unique_classes_per_days_per_tdc" => $request->input('number_unique_classes_per_days_per_tdc'),
-                        "number_unique_classes_per_days_per_dep" => $request->input('number_unique_classes_per_days_per_dep'),
-                        "number_prescribed_days_per_instruction" => $request->input('number_prescribed_days_per_instruction'),
-                    ]);
-        
-        });
+                        'ds_code' => $request->input('ds_code'),
+                        'ds_name' => $request->input('ds_name'),
+                        'ds_address' => $cAdress,
+                        'ds_contact_no' => $request->input('ds_contact_no'),
+                        'business_type' => $request->input('business_type'),
+                        'dti_accreditation_no' => $request->input('dti_accreditation_no'),
+                        'lto_accreditation_no' => $request->input('lto_accreditation_no'),
+                        'date_it_started' => $request->input('date_it_started'),
+                        'date_it_accredited' => $request->input('date_it_accredited'),
+                        'date_it_renewal' => $request->input('date_it_renewal'),
+                        'is_active' => $request->input('is_active'),
+                        'description' => $request->input('description'),
+                        'province' => $request->input('province'),
+                        'region' => $request->input('region'),
+                        'town_city' => $request->input('town_city'),
+                        'ds_fee_theoretical' => $request->input('ds_fee_theoretical'),
+                        'ds_fee_practical' => $request->input('ds_fee_practical'),
+                        'ds_fee_dep_cde' => $request->input('ds_fee_dep_cde'),
+                        'ds_fee_dep_drc' => $request->input('ds_fee_dep_drc'),
+                        'server_location' => $request->input('server_location'),
+                        'is_live' => $request->input('is_live'),
+                        'is_with_pos' => $request->input('is_with_pos'),
+                        'date_it_accreditation_renewal' => $request->input('date_it_accreditation_renewal'),
+                        'date_it_authorization_renewal' => $request->input('date_it_authorization_renewal'),
 
-        return redirect()->route('drivingSchool')->with('success', 'Driving School updated successfully.');
-        // return dd($request);
+                        'logo_big' => $filePaths['logo_big'],
+                        'logo_small' => $filePaths['logo_small'],
+                        'ds_pic1' => $filePaths['ds_pic1'],
+                        'ds_pic2' => $filePaths['ds_pic2'],
+                        'ds_pic3' => $filePaths['ds_pic3'],
+                        'ds_pic4' => $filePaths['ds_pic4'],
+                        'ds_pic5' => $filePaths['ds_pic5'],
+                    ]);
+            
+                DB::table('tb_settings')
+                    ->where('ds_code', $ds_code)
+                        ->update([
+                            "ds_code" => $request->input('ds_code'),
+                            "validity_theoretical" => $request->input('validity_theoretical'),
+                            "validity_practical" => $request->input('validity_practical'),
+                            "validity_dep_cde" => $request->input('validity_dep_cde'),
+                            "validity_dep_drc" => $request->input('validity_dep_drc'),
+                            "lto_fee_theoretical" => $request->input('lto_fee_theoretical'),
+                            "lto_fee_practical" => $request->input('lto_fee_practical'),
+                            "lto_fee_dep_cde" => $request->input('lto_fee_dep_cde'),
+                            "lto_fee_dep_drc" => $request->input('lto_fee_dep_drc'),
+                            "cdbs_fee_theoretical" => $request->input('cdbs_fee_theoretical'),
+                            "cdbs_fee_practical" => $request->input('cdbs_fee_practical'),
+                            "cdbs_fee_dep_cde" => $request->input('cdbs_fee_dep_cde'),
+                            "cdbs_fee_dep_drc" => $request->input('cdbs_fee_dep_drc'),
+                            "it_fee_theoretical" => $request->input('it_fee_theoretical'),
+                            "it_fee_practical" => $request->input('it_fee_practical'),
+                            "it_fee_dep_cde" => $request->input('it_fee_dep_cde'),
+                            "it_fee_dep_drc" => $request->input('it_fee_dep_drc'),
+                            "others_fee_theoretical" => $request->input('others_fee_theoretical'),
+                            "others_fee_practical" => $request->input('others_fee_practical'),
+                            "others_fee_dep_cde" => $request->input('others_fee_dep_cde'),
+                            "others_fee_dep_drc" => $request->input('others_fee_dep_drc'),
+                            "mc_daily_upload_limit" => $request->input('mc_daily_upload_limit'),
+                            "lv_daily_upload_limit" => $request->input('lv_daily_upload_limit'),
+                            "weekly_upload_limit" => $request->input('weekly_upload_limit'),
+                            "seating_capacity" => $request->input('seating_capacity'),
+                            "accredited_classroom_count" => $request->input('accredited_classroom_count'),
+                            "percentage_allowable_seating_capacity" => $request->input('percentage_allowable_seating_capacity'),
+                            "number_unique_classes_per_days_per_tdc" => $request->input('number_unique_classes_per_days_per_tdc'),
+                            "number_unique_classes_per_days_per_dep" => $request->input('number_unique_classes_per_days_per_dep'),
+                            "number_prescribed_days_per_instruction" => $request->input('number_prescribed_days_per_instruction'),
+                        ]);
+
+                        DB::commit();
+                        
+                        return redirect()->route('drivingSchool')->with('success', 'Driving School updated successfully.');
+                        
+            } catch (\Throwable $th) {
+                        DB::rollBack();
+
+        
+                        return redirect()->route('viewEditForm')->with('error', 'There was an error creating driving school.');
+                    }
+                    
+                });
+                    // return dd($request);
     }
 
 

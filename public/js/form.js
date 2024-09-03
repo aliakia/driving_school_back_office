@@ -19,7 +19,8 @@
       var $this = $(this);
       $this.wrap('<div class="position-relative"></div>').select2({
         placeholder: 'Select value',
-        dropdownParent: $this.parent()
+        dropdownParent: $this.parent(),
+        minimumResultsForSearch: Infinity
       });
     });
   }

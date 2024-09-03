@@ -165,8 +165,8 @@
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="form-label" for="description">DESCRIPTION</label>
-                                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror"
-                                                placeholder="DESCRIPTION"></textarea>
+                                            <textarea id="description" name="description"
+                                                class="form-control @error('description') is-invalid @enderror auto-caps" placeholder="DESCRIPTION"></textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -499,6 +499,13 @@
                                         @error('is_active')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+
+                                        {{-- <label for="gender">Gender</label>
+                                        <select name="gender" id="gender" class="select2 form-contol hide-search">
+                                            <option selected disabled>Select Gender</option>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                        </select> --}}
                                     </div>
 
                                 </div>

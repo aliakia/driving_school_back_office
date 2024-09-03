@@ -103,7 +103,7 @@
                                 <div class="col-12 col-md-12 col-lg-4 col-xl-6">
                                     <label class="form-label" for="ds_name">DRIVING SCHOOL NAME</label>
                                     <input name="ds_name" type="text" id="ds_name"
-                                        class="form-control @error('ds_name') is-invalid @enderror"
+                                        class="form-control @error('ds_name') is-invalid @enderror auto-caps"
                                         placeholder="DRIVING SCHOOL NAME"
                                         value="{{ old('ds_name', $selectedDs->ds_name) }}" />
                                     @error('ds_name')
@@ -113,7 +113,7 @@
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 form-password-toggle">
                                     <label class="form-label" for="ds_contact_no">CONTACT NUMBER</label>
                                     <input type="text" id="ds_contact_no" name="ds_contact_no"
-                                        class="form-control phone-mask @error('ds_contact_no') is-invalid @enderror"
+                                        class="form-control phone-mask @error('ds_contact_no') is-invalid @enderror auto-caps"
                                         placeholder="DRIVING SCHOOL CONTACT NUMBER"
                                         value="{{ old('ds_contact_no', $selectedDs->ds_contact_no) }}" />
                                     @error('ds_contact_no')
@@ -124,7 +124,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="business_type">BUSINESS TYPE</label>
                                         <input type="text"
-                                            class="form-control @error('business_type') is-invalid @enderror"
+                                            class="form-control @error('business_type') is-invalid @enderror auto-caps"
                                             id="business_type" name="business_type" placeholder="BUSINESS TYPE"
                                             value="{{ old('business_type', $selectedDs->business_type) }}" />
                                         @error('business_type')
@@ -135,7 +135,7 @@
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                                     <label class="form-label" for="ds_code">DRIVING SCHOOL CODE</label>
                                     <input type="text" id="ds_code"
-                                        class="form-control @error('ds_code') is-invalid @enderror"
+                                        class="form-control @error('ds_code') is-invalid @enderror auto-caps"
                                         placeholder="DRIVING SCHOOL CODE" name="ds_code"
                                         value="{{ old('ds_code', $selectedDs->ds_code) }}" />
                                     @error('ds_code')
@@ -147,7 +147,7 @@
                                         <label class="form-label" for="dti_accreditation_no">DTI ACCREDITATION
                                             NUMBER</label>
                                         <input type="number" id="dti_accreditation_no" name="dti_accreditation_no"
-                                            class="form-control @error('dti_accreditation_no') is-invalid @enderror"
+                                            class="form-control @error('dti_accreditation_no') is-invalid @enderror auto-caps"
                                             placeholder="DTI ACCREDITATION NUMBER"
                                             value="{{ old('dti_accreditation_no', $selectedDs->dti_accreditation_no) }}">
                                         @error('dti_accreditation_no')
@@ -160,7 +160,7 @@
                                         <label class="form-label" for="lto_accreditation_no">LTO ACCREDITATION
                                             NUMBER</label>
                                         <input type="number" id="lto_accreditation_no" name="lto_accreditation_no"
-                                            class="form-control @error('lto_accreditation_no') is-invalid @enderror"
+                                            class="form-control @error('lto_accreditation_no') is-invalid @enderror auto-caps"
                                             placeholder="LTO ACCREDITATION NUMBER"
                                             value="{{ old('lto_accreditation_no', $selectedDs->lto_accreditation_no) }}">
                                         @error('lto_accreditation_no')
@@ -173,8 +173,8 @@
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="form-label" for="description">DESCRIPTION</label>
-                                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror"
-                                                placeholder="DESCRIPTION">{{ old('description', $selectedDs->description) }}</textarea>
+                                            <textarea id="description" name="description"
+                                                class="form-control @error('description') is-invalid @enderror auto-caps" placeholder="DESCRIPTION">{{ old('description', $selectedDs->description) }}</textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -185,7 +185,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="town_city">TOWN/CITY</label>
                                         <input type="text" id="town_city" name="town_city"
-                                            class="form-control @error('town_city') is-invalid @enderror"
+                                            class="form-control @error('town_city') is-invalid @enderror auto-caps"
                                             placeholder="TOWN/CITY"
                                             value="{{ old('town_city', $selectedDs->town_city) }}">
                                         @error('town_city')
@@ -198,7 +198,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="region">REGION</label>
                                         <input type="text" id="region" name="region"
-                                            class="form-control @error('region') is-invalid @enderror"
+                                            class="form-control @error('region') is-invalid @enderror auto-caps"
                                             placeholder="REGION" value="{{ old('region', $selectedDs->region) }}">
                                         @error('region')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -210,7 +210,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="province">PROVINCE</label>
                                         <input type="text" id="province" name="province"
-                                            class="form-control @error('province') is-invalid @enderror"
+                                            class="form-control @error('province') is-invalid @enderror auto-caps"
                                             placeholder="PROVINCE" value="{{ old('province', $selectedDs->province) }}">
                                         @error('province')
                                             <div class="invalid-feedback">{{ $message }}</div>

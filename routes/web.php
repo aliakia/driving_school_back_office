@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DSController;
 use App\Http\Controllers\SettingController;
@@ -21,9 +22,14 @@ Route::middleware(['auth.check'])->group(function(){
     });
 
 
-    // Settings Routes
-    Route::prefix('settings')->group(function() {
-        Route::get('/', [SettingController::class, 'settingLists'])->name('settings');
+    //Account Controller
+    Route::prefix('accounts')->group(function(){
+        Route::get('/', [AccountController::class, 'index'])->name('accounts');
+        Route::get('/data', [AccountController::class, 'fetchData'])->name('accountsDataUrl');
+        Route::post('/create', [AccountController::class, 'createAccount'])->name('createAccount');
+        Route::get('/edit/{user_id}', [AccountController::class, 'viewEditForm'])->name('editAccForm');
+        Route::post('/edit/{user_id}', [AccountController::class, 'editAccount'])->name('editAccount');
+        Route::delete('/delete/{user_id}', [AccountController::class, 'deleteAccount'])->name('deleteAccount');
     });
 });
 

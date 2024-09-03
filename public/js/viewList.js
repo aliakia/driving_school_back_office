@@ -43,7 +43,7 @@ $(function () {
               '<input type="hidden" name="_method" value="DELETE">' +
               '<button type="submit" class="dropdown-item mx-2 text-danger align-center"><i class="text-danger ti ti-trash me-3"></i>Delete</button>' +
               '</form>' +
-              '</ul>' +
+              '</li></ul>' +
               '</div>'
             );
           }
