@@ -27,8 +27,8 @@ Route::middleware(['auth.check'])->group(function(){
         Route::get('/', [AccountController::class, 'index'])->name('accounts');
         Route::get('/data', [AccountController::class, 'fetchData'])->name('accountsDataUrl');
         Route::post('/create', [AccountController::class, 'createAccount'])->name('createAccount');
-        Route::get('/edit/{user_id}', [AccountController::class, 'viewEditForm'])->name('editAccForm');
-        Route::post('/edit/{user_id}', [AccountController::class, 'editAccount'])->name('editAccount');
+        Route::get('/{user_id}', [AccountController::class, 'viewEditForm'])->name('editAccForm');
+        Route::put('/{user_id}/edit', [AccountController::class, 'editAccount'])->name('editAccount');
         Route::delete('/delete/{user_id}', [AccountController::class, 'deleteAccount'])->name('deleteAccount');
     });
 });

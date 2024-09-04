@@ -56,20 +56,6 @@
   const selects = document.querySelectorAll('#wizard-validation-form select');
   const textarea = document.querySelectorAll('#wizard-validation-form textarea');
 
-  const inputToCap = document.querySelectorAll('#ds_name', '#ds_code');
-
-  window.addEventListener('change', () => {
-    inputToCap.forEach(input => {
-      input.value = input.value.toUpperCase();
-    });
-  });
-
-  document.querySelectorAll('.auto-caps').forEach(input => {
-    input.addEventListener('input', function () {
-      this.value = this.value.toUpperCase();
-    });
-  });
-
   window.addEventListener('change', () => {
     inputs.forEach(input => {
       updatePreview(input.id, input.value);

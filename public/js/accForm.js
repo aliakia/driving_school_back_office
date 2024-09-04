@@ -5,22 +5,278 @@
 'use strict';
 
 (function () {
-  const select2 = $('.select2'),
-    selectPicker = $('.selectpicker');
+  function updatePreview(id, value) {
+    const previewElement = document.getElementById('preview-' + id);
 
-  // Wizard Validation
-  // --------------------------------------------------------------------
+    if (!previewElement) {
+      return;
+    }
+
+    let displayValue;
+
+    switch (id) {
+      case 'is_active':
+        displayValue = value == 1 ? 'Active' : 'Inactive';
+        break;
+      case 'is_with_pos':
+        displayValue = value == 1 ? 'With POS' : 'Without POS';
+        break;
+      case 'is_live':
+        displayValue = value == 1 ? 'Live' : 'Not Live';
+        break;
+      default:
+        displayValue = value;
+        break;
+    }
+
+    previewElement.textContent = displayValue;
+  }
+
+  const inputs = document.querySelectorAll('#wizard-validation-form input');
+  const selects = document.querySelectorAll('#wizard-validation-form select');
+  const textarea = document.querySelectorAll('#wizard-validation-form textarea');
+
+  window.addEventListener('change', () => {
+    inputs.forEach(input => {
+      updatePreview(input.id, input.value);
+    });
+  });
+  window.addEventListener('change', () => {
+    textarea.forEach(textarea => {
+      updatePreview(textarea.id, textarea.value);
+    });
+  });
+
+  window.addEventListener('click', () => {
+    selects.forEach(select => {
+      updatePreview(select.id, select.value);
+    });
+  });
+
+  $('#open_bio').on('click', function () {
+    $('#hand_modal').modal({
+      backdrop: 'static',
+      keyboard: false,
+      backdrop: false
+  });
+    $('#hand_modal').modal('show');
+  });
+  $('#open_cam').on('click', function () {
+    $('#camera').modal('show');
+  });
+
+  $('.fingers').on('click', function () {
+    // console.log('finger1');
+
+    localStorage.setItem('fp', this.value);
+    var frameSrc =
+      '<iframe src="../biometrics/content.html" style="zoom:1.0" frameborder="0" height="400" width="100%" id="frame1"></iframe>';
+    $('#bio_modal_body').html(frameSrc);
+    $('#biometrics_modal').modal({
+      backdrop: 'static',
+      keyboard: false,
+      backdrop: false
+    });
+    // $('#biometrics_modal').modal({ show: true });
+    $('#biometrics_modal').modal('show');
+    var fp = localStorage.getItem('fp');
+    $.ajax({
+      type: 'GET',
+      crossDomain: true,
+      url: 'http://localhost:5000/Enroll_Biometrics',
+      success: function (result) {
+        if (fp == '' || fp == null) {
+          $('#scan_success').html('Error Scanning');
+        } else if (fp == '1') {
+          localStorage.setItem('fp_idl1', result);
+        } else if (fp == '2') {
+          localStorage.setItem('fp_idl2', result);
+        } else if (fp == '3') {
+          localStorage.setItem('fp_idl3', result);
+        } else if (fp == '4') {
+          localStorage.setItem('fp_idl4', result);
+        } else if (fp == '5') {
+          localStorage.setItem('fp_idl5', result);
+        } else if (fp == '6') {
+          localStorage.setItem('fp_idr1', result);
+        } else if (fp == '7') {
+          localStorage.setItem('fp_idr2', result);
+        } else if (fp == '8') {
+          localStorage.setItem('fp_idr3', result);
+        } else if (fp == '9') {
+          localStorage.setItem('fp_idr4', result);
+        } else if (fp == '10') {
+          localStorage.setItem('fp_idr10', result);
+        }
+      }
+    });
+  });
+  $('#save_fp').on('click', function () {
+    var fp_idl1 = localStorage.getItem('fp_idl1'),
+      fp_idl2 = localStorage.getItem('fp_idl2'),
+      fp_idl3 = localStorage.getItem('fp_idl3'),
+      fp_idl4 = localStorage.getItem('fp_idl4'),
+      fp_idl5 = localStorage.getItem('fp_idl5'),
+      fp_idr1 = localStorage.getItem('fp_idr1'),
+      fp_idr2 = localStorage.getItem('fp_idr2'),
+      fp_idr3 = localStorage.getItem('fp_idr3'),
+      fp_idr4 = localStorage.getItem('fp_idr4'),
+      fp_idr5 = localStorage.getItem('fp_idr5');
+    if (fp_idl1 != '' || fp_idl1 != null) {
+      $('#fp_idl1').val(fp_idl1);
+    } else {
+      let fp = '1';
+      errorMessage(fp);
+    }
+    if (fp_idl2 != '' || fp_idl2 != null) {
+      $('#fp_idl2').val(fp_idl2);
+    } else {
+      let fp = '2';
+      errorMessage(fp);
+    }
+    if (fp_idl3 != '' || fp_idl3 != null) {
+      $('#fp_idl3').val(fp_idl3);
+    } else {
+      let fp = '3';
+      errorMessage(fp);
+    }
+    if (fp_idl4 != '' || fp_idl4 != null) {
+      $('#fp_idl4').val(fp_idl4);
+    } else {
+      let fp = '4';
+      errorMessage(fp);
+    }
+    if (fp_idl5 != '' || fp_idl5 != null) {
+      $('#fp_idl5').val(fp_idl5);
+    } else {
+      let fp = '5';
+      errorMessage(fp);
+    }
+    if (fp_idr1 != '' || fp_idr1 != null) {
+      $('#fp_idr1').val(fp_idr1);
+    } else {
+      let fp = '6';
+      errorMessage(fp);
+    }
+    if (fp_idr2 != '' || fp_idr2 != null) {
+      $('#fp_idr2').val(fp_idr2);
+    } else {
+      let fp = '7';
+      errorMessage(fp);
+    }
+    if (fp_idr3 != '' || fp_idr3 != null) {
+      $('#fp_idr3').val(fp_idr3);
+    } else {
+      let fp = '8';
+      errorMessage(fp);
+    }
+    if (fp_idr4 != '' || fp_idr4 != null) {
+      $('#fp_idr4').val(fp_idr4);
+    } else {
+      let fp = '9';
+      errorMessage(fp);
+    }
+    if (fp_idr5 != '' || fp_idr5 != null) {
+      $('#fp_idr5').val(fp_idr5);
+    } else {
+      let fp = '10';
+      errorMessage(fp);
+    }
+    $('#hand_modal').modal('hide');
+  });
+
+  $('#select').on('click', function () {
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function (stream) {
+          video.srcObject = stream;
+        })
+        .catch(function (err0r) {
+          alert('Something went wrong!');
+        });
+    }
+    $('#camera').modal({
+      backdrop: 'static',
+      keyboard: false,
+      backdrop: false
+    });
+    Webcam.set({
+      width: 640,
+      height: 480,
+      align: 'center',
+      image_format: 'jpeg',
+      jpeg_quality: 100
+    });
+    Webcam.attach('#video');
+  });
+
+  $('#capture').on('click', function () {
+    capture();
+  });
+  // $('#saveImg').on('click', function () {
+  //   // save();
+  // });
+
+  // function capture() {
+  //   // var canvas = $('#canvas');
+  //   // Webcam.snap( function(data_uri) {
+  //   //     canvas.attr('src', data_uri);
+  //   //     $('#canvas').removeClass('hidden');
+  //   //     $('#saveImg').removeClass('hidden');
+  //   // });
+  //   var canvas = document.getElementById('canvas');
+  //   var video = document.getElementById('video');
+  //   canvas.width = 640;
+  //   canvas.height = 480;
+  //   canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+  //   $('#canvas').removeClass('hidden');
+  //   $('#saveImg').removeClass('hidden');
+  // }
+  // function save() {
+  //   // var base_64 = $('#canvas').attr('src');
+  //   // $('#picture_1').attr('src', base_64);
+  //   // $('#base_64').val(base_64);
+  //   // $('#canvas').addClass('hidden');
+  //   // $('#saveImg').addClass('hidden');
+  //   document.getElementById('picture_1').src = canvas.toDataURL();
+  //   $('#base_64').val(canvas.toDataURL());
+  //   $('#canvas').addClass('hidden');
+  //   $('#saveImg').addClass('hidden');
+  // }
+
+  const select2 = $('.select2'),
+    basicPickr = $('.flatpickr-date');
+
+  if (basicPickr.length) {
+    basicPickr.each(function () {
+      $(this).flatpickr({
+        dateFormat: 'Y-m-d'
+      });
+    });
+  }
+
+  if (select2.length) {
+    select2.each(function () {
+      $(this)
+        .wrap('<div class="position-relative"></div>')
+        .select2({
+          placeholder: 'Select value',
+          dropdownParent: $(this).parent(),
+          minimumResultsForSearch: Infinity
+        });
+    });
+  }
+
   const wizardValidation = document.querySelector('#wizard-validation');
   if (typeof wizardValidation !== undefined && wizardValidation !== null) {
-    // Wizard form
     const wizardValidationForm = wizardValidation.querySelector('#wizard-validation-form');
-    // Wizard steps
     const wizardValidationFormStep1 = wizardValidationForm.querySelector('#account-details-validation');
     const wizardValidationFormStep2 = wizardValidationForm.querySelector('#personal-info-validation');
-    const wizardValidationFormStep3 = wizardValidationForm.querySelector('#social-links-validation');
-    // Wizard next prev button
-    const wizardValidationNext = [].slice.call(wizardValidationForm.querySelectorAll('.btn-next'));
+    const wizardValidationFormStep3 = wizardValidationForm.querySelector('#review-submit');
+
     const wizardValidationPrev = [].slice.call(wizardValidationForm.querySelectorAll('.btn-prev'));
+    const wizardValidationNext = [].slice.call(wizardValidationForm.querySelectorAll('.btn-next'));
 
     const validationStepper = new Stepper(wizardValidation, {
       linear: true
@@ -29,15 +285,10 @@
     // Account details
     const FormValidation1 = FormValidation.formValidation(wizardValidationFormStep1, {
       fields: {
-        formValidationUsername: {
+        recno: {
           validators: {
             notEmpty: {
-              message: 'The name is required'
-            },
-            stringLength: {
-              min: 6,
-              max: 30,
-              message: 'The name must be more than 6 and less than 30 characters long'
+              message: 'This field is required'
             },
             regexp: {
               regexp: /^[a-zA-Z0-9 ]+$/,
@@ -45,31 +296,65 @@
             }
           }
         },
-        formValidationEmail: {
+        user_id: {
           validators: {
             notEmpty: {
-              message: 'The Email is required'
+              message: 'This field is required'
+            }
+          }
+        },
+        employee_id: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
             },
-            emailAddress: {
-              message: 'The value is not a valid email address'
+            regexp: {
+              regexp: /^[a-zA-Z0-9 ]+$/,
+              message: 'The name can only consist of alphabetical, number and space'
             }
           }
         },
-        formValidationPass: {
+        ds_code: {
           validators: {
             notEmpty: {
-              message: 'The password is required'
+              message: 'This field is required'
             }
           }
         },
+        certificate_tesda_expiration: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        certificate_tesda_expiration: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        user_expiration: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+        is_active: {
+          validators: {
+            notEmpty: {
+              message: 'This field is required'
+            }
+          }
+        },
+
         formValidationConfirmPass: {
           validators: {
-            notEmpty: {
-              message: 'The Confirm Password is required'
-            },
             identical: {
               compare: function () {
-                return wizardValidationFormStep1.querySelector('[name="formValidationPass"]').value;
+                return wizardValidationFormStep1.querySelector('[name="password"]').value;
               },
               message: 'The password and its confirm are not the same'
             }
@@ -82,7 +367,7 @@
           // Use this for enabling/changing valid/invalid class
           // eleInvalidClass: '',
           eleValidClass: '',
-          rowSelector: '.col-sm-6'
+          rowSelector: '.col-12'
         }),
         autoFocus: new FormValidation.plugins.AutoFocus(),
         submitButton: new FormValidation.plugins.SubmitButton()
@@ -103,31 +388,38 @@
     // Personal info
     const FormValidation2 = FormValidation.formValidation(wizardValidationFormStep2, {
       fields: {
-        formValidationFirstName: {
+        first_name: {
           validators: {
             notEmpty: {
               message: 'The first name is required'
             }
           }
         },
-        formValidationLastName: {
+        middle_name: {
+          validators: {
+            notEmpty: {
+              message: 'The middle name is required'
+            }
+          }
+        },
+        last_name: {
           validators: {
             notEmpty: {
               message: 'The last name is required'
             }
           }
         },
-        formValidationCountry: {
+        gender: {
           validators: {
             notEmpty: {
-              message: 'The Country is required'
+              message: 'The gender is required'
             }
           }
         },
-        formValidationLanguage: {
+        user_type: {
           validators: {
             notEmpty: {
-              message: 'The Languages is required'
+              message: 'The user type is required'
             }
           }
         }
@@ -138,7 +430,7 @@
           // Use this for enabling/changing valid/invalid class
           // eleInvalidClass: '',
           eleValidClass: '',
-          rowSelector: '.col-sm-6'
+          rowSelector: '.col-12'
         }),
         autoFocus: new FormValidation.plugins.AutoFocus(),
         submitButton: new FormValidation.plugins.SubmitButton()
@@ -148,73 +440,13 @@
       validationStepper.next();
     });
 
-    // Bootstrap Select (i.e Language select)
-    if (selectPicker.length) {
-      selectPicker.each(function () {
-        var $this = $(this);
-        $this.selectpicker().on('change', function () {
-          FormValidation2.revalidateField('formValidationLanguage');
-        });
-      });
-    }
-
-    // select2
-    if (select2.length) {
-      select2.each(function () {
-        var $this = $(this);
-        $this.wrap('<div class="position-relative"></div>');
-        $this
-          .select2({
-            placeholder: 'Select an country',
-            dropdownParent: $this.parent()
-          })
-          .on('change.select2', function () {
-            // Revalidate the color field when an option is chosen
-            FormValidation2.revalidateField('formValidationCountry');
-          });
-      });
-    }
-
     // Social links
     const FormValidation3 = FormValidation.formValidation(wizardValidationFormStep3, {
       fields: {
-        formValidationTwitter: {
+        checkBox: {
           validators: {
             notEmpty: {
-              message: 'The Twitter URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
-            }
-          }
-        },
-        formValidationFacebook: {
-          validators: {
-            notEmpty: {
-              message: 'The Facebook URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
-            }
-          }
-        },
-        formValidationGoogle: {
-          validators: {
-            notEmpty: {
-              message: 'The Google URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
-            }
-          }
-        },
-        formValidationLinkedIn: {
-          validators: {
-            notEmpty: {
-              message: 'The LinkedIn URL is required'
-            },
-            uri: {
-              message: 'The URL is not proper'
+              message: 'Check the box if all info is correct. Go back if not.'
             }
           }
         }
@@ -222,20 +454,15 @@
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-          // Use this for enabling/changing valid/invalid class
-          // eleInvalidClass: '',
           eleValidClass: '',
-          rowSelector: '.col-sm-6'
+          rowSelector: '.col-12'
         }),
         autoFocus: new FormValidation.plugins.AutoFocus(),
         submitButton: new FormValidation.plugins.SubmitButton()
       }
     }).on('core.form.valid', function () {
-      // You can submit the form
-      // wizardValidationForm.submit()
-      // or send the form data to server via an Ajax request
-      // To make the demo simple, I just placed an alert
       window.location.href = homeUrl;
+      // console.log('fdfd');
     });
 
     wizardValidationNext.forEach(item => {

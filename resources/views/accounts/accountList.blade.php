@@ -1,6 +1,9 @@
+@php
+    $configData = Helper::appClasses();
+@endphp
 @extends('layouts/layoutMaster')
 
-@section('title', 'DataTables - Tables')
+@section('title', 'Accounts')
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
@@ -9,6 +12,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/animate-css/animate.css')}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
 
     <!-- Row Group CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css') }}">
@@ -17,6 +22,7 @@
 @endsection
 
 @section('vendor-script')
+<script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
 
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
@@ -40,10 +46,9 @@
 @endsection
 
 @section('content')
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         {{ implode('', $errors->all('<div>:message</div>')) }}
-    @endif
-    <!-- DataTable with Buttons -->
+    @endif --}}
     <div class="card">
         <div class="card-datatable table-responsive pt-0">
             <table class="datatables-basic table">
@@ -61,7 +66,6 @@
             </table>
         </div>
     </div>
-    <!-- Modal to add new record -->
     <div class="modal fade" id="newAccount" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
             <div class="modal-content p-1 p-md-1">
@@ -215,20 +219,15 @@
         </div>
     </div>
 
-    <!-- Modal to view details -->
-    <!-- Button to Trigger AJAX Request -->
 
 
-    <!-- Modal to Display Account Details -->
     <div class="modal fade text-left" id="hand_modal" tabindex="-3" role="dialog" aria-labelledby="myModalLabel8"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-lg modal-simple" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel8">Biometrics Registration</h4>
-                    {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> --}}
+
                 </div>
 
                 {{-- @php
@@ -245,11 +244,11 @@
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="2">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
-                    <button style="position: absolute; left: 25.5%; top: 11%; z-index: inherit;"
+                    <button style="position: absolute; left: 25.5%; top: 13.5%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="3">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
-                    <button style="position: absolute; left: 33%; top: 15.5%; z-index: inherit;"
+                    <button style="position: absolute; left: 34%; top: 17.5%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="4">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
@@ -261,19 +260,19 @@
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="6">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
-                    <button style="position: absolute; right: 33%; top: 15.5%;; z-index: inherit;"
+                    <button style="position: absolute; right: 34%; top: 17.5%;; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="7">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
-                    <button style="position: absolute; right: 24.5%; top: 11%; z-index: inherit;"
+                    <button style="position: absolute; right: 25.5%; top: 13.5%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="8">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
-                    <button style="position: absolute; right: 14.8%; top: 11%; z-index: inherit;"
+                    <button style="position: absolute; right: 15.5%; top: 14%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="9">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
-                    <button style="position: absolute; right:  5.5%; top: 21%; z-index: inherit;"
+                    <button style="position: absolute; right:  7%; top: 25%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="10">
                         <i data-feather="circle" class="font-large-1 text-white"></i>
                     </button>
@@ -396,9 +395,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel4">Capture Image</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" id="close_cam" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="embed-responsive embed-responsive-4by3">

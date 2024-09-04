@@ -1,6 +1,45 @@
 'use strict';
 
 $(function () {
+  $(document).on('click', '.delete-btn', function (e) {
+    e.preventDefault(); // Prevent the form from submitting immediately
+
+    var form = $(this).closest('form'); // Get the form
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        form.submit(); // Submit the form if confirmed
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your record has been deleted.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelled',
+          text: 'Your record is safe :)',
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  });
   const dtBasic = $('.datatables-basic');
 
   if (dtBasic.length) {
@@ -36,12 +75,12 @@ $(function () {
               '" class="dropdown-item mx-2 text-primary align-center"><i class="ti ti-pencil me-3"></i>Edit</a></li>' +
               '<li><form action="' +
               deleteUrl +
-              '" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to delete this record?\');">' +
+              '" method="POST" style="display:inline;"' +
               '<input type="hidden" name="_token" value="' +
               csrfToken +
               '">' +
               '<input type="hidden" name="_method" value="DELETE">' +
-              '<button type="submit" class="dropdown-item mx-2 text-danger align-center"><i class="text-danger ti ti-trash me-3"></i>Delete</button>' +
+              '<button type="submit" class="dropdown-item mx-2 text-danger align-center delete-btn"><i class="text-danger ti ti-trash me-3"></i>Delete</button>' +
               '</form>' +
               '</li></ul>' +
               '</div>'

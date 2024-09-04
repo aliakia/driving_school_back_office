@@ -92,16 +92,16 @@ $(document).ready(function () {
               '<li><a href="' +
               editUrl +
               '" class="dropdown-item mx-2 text-primary align-center"><i class="ti ti-pencil me-3"></i>Edit</a></li>' +
-              '<li><form action="' +
+             '<li><form action="' +
               deleteUrl +
-              '" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure you want to delete this record?\');">' +
+              '" method="POST" style="display:inline;" class="delete-form">' +
               '<input type="hidden" name="_token" value="' +
               csrfToken +
               '">' +
               '<input type="hidden" name="_method" value="DELETE">' +
-              '<button type="submit" class="dropdown-item mx-2 text-danger align-center"><i class="text-danger ti ti-trash me-3"></i>Delete</button>' +
-              '</form>' +
-              '</li></ul>' +
+              '<button type="button" class="dropdown-item mx-2 text-danger align-center delete-btn">' +
+              '<i class="text-danger ti ti-trash me-3"></i>Delete</button>' +
+              '</form></li></ul>' +
               '</div>'
             );
           }
@@ -122,13 +122,210 @@ $(document).ready(function () {
         }
       ]
     });
-    $('div.head-label').html('<h5 class="card-title mb-0">DataTable with Buttons</h5>');
+    $('div.head-label').html('<h5 class="card-title mb-0">Accounts</h5>');
   }
+
+  $(document).on('click', '.delete-btn', function (e) {
+    e.preventDefault(); // Prevent the form from submitting immediately
+
+    var form = $(this).closest('form'); // Get the form
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            form.submit(); // Submit the form if confirmed
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Your record has been deleted.',
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire({
+                title: 'Cancelled',
+                text: 'Your record is safe :)',
+                icon: 'error',
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        }
+    });
+});
 
   $('#open_bio').on('click', function () {
     $('#hand_modal').modal('show');
   });
   $('#open_cam').on('click', function () {
     $('#camera').modal('show');
+  });
+
+  $('#open_bio').on('click', function () {
+    $('#hand_modal').modal('show');
+  });
+  $('#open_cam').on('click', function () {
+    $('#camera').modal('show');
+  });
+
+  $('.fingers').on('click', function () {
+    // console.log('finger1');
+
+    localStorage.setItem('fp', this.value);
+    var frameSrc =
+      '<iframe src="../biometrics/content.html" style="zoom:1.0" frameborder="0" height="400" width="100%" id="frame1"></iframe>';
+    $('#bio_modal_body').html(frameSrc);
+    $('#biometrics_modal').modal({
+      backdrop: 'static',
+      keyboard: false,
+      backdrop: false
+    });
+    // $('#biometrics_modal').modal({ show: true });
+    $('#biometrics_modal').modal('show');
+    var fp = localStorage.getItem('fp');
+    $.ajax({
+      type: 'GET',
+      crossDomain: true,
+      url: 'http://localhost:5000/Enroll_Biometrics',
+      success: function (result) {
+        if (fp == '' || fp == null) {
+          $('#scan_success').html('Error Scanning');
+        } else if (fp == '1') {
+          localStorage.setItem('fp_idl1', result);
+        } else if (fp == '2') {
+          localStorage.setItem('fp_idl2', result);
+        } else if (fp == '3') {
+          localStorage.setItem('fp_idl3', result);
+        } else if (fp == '4') {
+          localStorage.setItem('fp_idl4', result);
+        } else if (fp == '5') {
+          localStorage.setItem('fp_idl5', result);
+        } else if (fp == '6') {
+          localStorage.setItem('fp_idr1', result);
+        } else if (fp == '7') {
+          localStorage.setItem('fp_idr2', result);
+        } else if (fp == '8') {
+          localStorage.setItem('fp_idr3', result);
+        } else if (fp == '9') {
+          localStorage.setItem('fp_idr4', result);
+        } else if (fp == '10') {
+          localStorage.setItem('fp_idr10', result);
+        }
+      }
+    });
+  });
+  $('#save_fp').on('click', function () {
+    var fp_idl1 = localStorage.getItem('fp_idl1'),
+      fp_idl2 = localStorage.getItem('fp_idl2'),
+      fp_idl3 = localStorage.getItem('fp_idl3'),
+      fp_idl4 = localStorage.getItem('fp_idl4'),
+      fp_idl5 = localStorage.getItem('fp_idl5'),
+      fp_idr1 = localStorage.getItem('fp_idr1'),
+      fp_idr2 = localStorage.getItem('fp_idr2'),
+      fp_idr3 = localStorage.getItem('fp_idr3'),
+      fp_idr4 = localStorage.getItem('fp_idr4'),
+      fp_idr5 = localStorage.getItem('fp_idr5');
+    if (fp_idl1 != '' || fp_idl1 != null) {
+      $('#fp_idl1').val(fp_idl1);
+    } else {
+      let fp = '1';
+      errorMessage(fp);
+    }
+    if (fp_idl2 != '' || fp_idl2 != null) {
+      $('#fp_idl2').val(fp_idl2);
+    } else {
+      let fp = '2';
+      errorMessage(fp);
+    }
+    if (fp_idl3 != '' || fp_idl3 != null) {
+      $('#fp_idl3').val(fp_idl3);
+    } else {
+      let fp = '3';
+      errorMessage(fp);
+    }
+    if (fp_idl4 != '' || fp_idl4 != null) {
+      $('#fp_idl4').val(fp_idl4);
+    } else {
+      let fp = '4';
+      errorMessage(fp);
+    }
+    if (fp_idl5 != '' || fp_idl5 != null) {
+      $('#fp_idl5').val(fp_idl5);
+    } else {
+      let fp = '5';
+      errorMessage(fp);
+    }
+    if (fp_idr1 != '' || fp_idr1 != null) {
+      $('#fp_idr1').val(fp_idr1);
+    } else {
+      let fp = '6';
+      errorMessage(fp);
+    }
+    if (fp_idr2 != '' || fp_idr2 != null) {
+      $('#fp_idr2').val(fp_idr2);
+    } else {
+      let fp = '7';
+      errorMessage(fp);
+    }
+    if (fp_idr3 != '' || fp_idr3 != null) {
+      $('#fp_idr3').val(fp_idr3);
+    } else {
+      let fp = '8';
+      errorMessage(fp);
+    }
+    if (fp_idr4 != '' || fp_idr4 != null) {
+      $('#fp_idr4').val(fp_idr4);
+    } else {
+      let fp = '9';
+      errorMessage(fp);
+    }
+    if (fp_idr5 != '' || fp_idr5 != null) {
+      $('#fp_idr5').val(fp_idr5);
+    } else {
+      let fp = '10';
+      errorMessage(fp);
+    }
+    $('#hand_modal').modal('hide');
+  });
+
+  $('#select').on('click', function () {
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function (stream) {
+          video.srcObject = stream;
+        })
+        .catch(function (err0r) {
+          alert('Something went wrong!');
+        });
+    }
+    $('#camera').modal({
+      backdrop: 'static',
+      keyboard: false,
+      backdrop: false
+    });
+    Webcam.set({
+      width: 640,
+      height: 480,
+      align: 'center',
+      image_format: 'jpeg',
+      jpeg_quality: 100
+    });
+    Webcam.attach('#video');
+  });
+
+  $('#capture').on('click', function () {
+    capture();
   });
 });
