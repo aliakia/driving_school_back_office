@@ -12,8 +12,12 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
-    <link rel="stylesheet" href="{{asset('assets/vendor/libs/animate-css/animate.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/toastr/toastr.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
+
 
     <!-- Row Group CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css') }}">
@@ -22,7 +26,11 @@
 @endsection
 
 @section('vendor-script')
-<script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
+    <script src="{{ asset('assets/vendor/libs/toastr/toastr.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
 
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
@@ -36,7 +44,9 @@
 @endsection
 
 @section('page-script')
+    <script src="{{ asset('assets/js/ui-toasts.js') }}"></script>
     <script>
+        const createAccUrl = "{{ route('createAccount') }}"
         const adURL = "{{ route('accountsDataUrl') }}";
         const deleteFormBaseUrl = "{{ route('deleteAccount', ['user_id' => '__REPLACE__']) }}";
         const editFormBaseUrl = "{{ route('editAccForm', ['user_id' => '__REPLACE__']) }}";
@@ -46,9 +56,23 @@
 @endsection
 
 @section('content')
-    {{-- @if ($errors->any())
-        {{ implode('', $errors->all('<div>:message</div>')) }}
-    @endif --}}
+    @if ($errors->any())
+        <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+            <div class="toast-header">
+                <i class="ti ti-bell ti-xs me-2 text-danger"></i>
+                <div class="me-auto fw-semibold">Account not created!</div>
+                <small class="text-muted">{{ now()->diffForHumans() }}</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-datatable table-responsive pt-0">
             <table class="datatables-basic table">
@@ -69,10 +93,10 @@
     <div class="modal fade" id="newAccount" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
             <div class="modal-content p-1 p-md-1">
-                <div class="modal-body">
+                <div class="modal-body" id="reg_div">
                     <button type="button" class="btn-close m-md-5" data-bs-dismiss="modal" aria-label="Close"></button>
 
-                    <form action="{{ route('createAccount') }}" method="POST" id="newAccountForm" class="mt-1">
+                    <form action="{{ route('createAccount') }}" method="POST" id="reg_form" class="mt-1">
                         @csrf
                         <div class="col-12">
                             <div class="w-full mb-1 text-center">
@@ -97,33 +121,51 @@
 
                         <div class="form-group mb-2">
                             <label class="form-label" for="recno">Rec No</label>
-                            <input type="number" id="recno" class="form-control" name="recno" placeholder="Rec No"
-                                oninput="this.value = this.value.toUpperCase()" />
+                            <input type="number" id="recno" class="form-control" name="recno"
+                                placeholder="Rec No" oninput="this.value = this.value.toUpperCase()" />
+                            @error('recno')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="user_id">User ID</label>
                             <input type="text" id="user_id" class="form-control" name="user_id"
-                                placeholder="User ID" oninput="this.value = this.value.toUpperCase()" />
+                                placeholder="User ID" />
+                            @error('user_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="employee_id">Employee ID</label>
                             <input type="text" id="employee_id" class="form-control" name="employee_id"
                                 placeholder="Employee ID" oninput="this.value = this.value.toUpperCase()" />
+                            @error('employee_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="first_name">First Name</label>
                             <input type="text" id="first_name" class="form-control" name="first_name"
                                 placeholder="First Name" oninput="this.value = this.value.toUpperCase()" />
+                            @error('first_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="middle_name">Middle Name</label>
                             <input type="text" id="middle_name" class="form-control" name="middle_name"
                                 placeholder="Middle Name" oninput="this.value = this.value.toUpperCase()" />
+                            @error('middle_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="last_name">Last Name</label>
                             <input type="text" id="last_name" class="form-control" name="last_name"
                                 placeholder="Last Name" oninput="this.value = this.value.toUpperCase()" />
+                            @error('last_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group mb-2">
@@ -134,6 +176,9 @@
                                 <option value="MALE">MALE</option>
                                 <option value="FEMALE">FEMALE</option>
                             </select>
+                            @error('gender')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group mb-2">
@@ -143,7 +188,11 @@
                                 <option value="administrator">Administrator</option>
                                 <option value="instructor">Instructor</option>
                                 <option value="encoder">Encoder</option>
+                                <option value="tech_support">Tech Support</option>
                             </select>
+                            @error('user_type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="is_active">Activity Status</label>
@@ -155,67 +204,88 @@
                                 <option value="1">Active
                                 </option>
                             </select>
+                            @error('is_active')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="description">Description</label>
                             <textarea name="description" placeholder="Description" id="description" class="form-control"></textarea>
                         </div>
+
                         <div class="form-group mb-2">
                             <label class="form-label" for="ds_code">DS Code</label>
                             <input type="text" id="ds_code" class="form-control" name="ds_code"
                                 placeholder="DS Code" oninput="this.value = this.value.toUpperCase()" />
+                            @error('ds_code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
-                            <label class="form-label" for="certificate_tesda">Tesda Certificate</label>
                             <input type="text" id="certificate_tesda" class="form-control" name="certificate_tesda"
                                 placeholder="Tesda Certificate" />
+                            @error('certificate_tesda')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="certificate_tesda_expiration">Tesda Certificate
                                 Expiration</label>
                             <input type="date" class="form-control flatpickr-date" id="certificate_tesda_expiration"
                                 placeholder="YYYY-MM-DD" name="certificate_tesda_expiration"
-                                aria-describedby="certificate_tesda_expiration" value="" />
+                                aria-describedby="certificate_tesda_expiration"
+                                oninput="this.value = this.value.toUpperCase()" />
+                            @error('certificate_tesda_expiration')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
                         </div>
                         <div class="form-group mb-2">
                             <label class="form-label" for="user_expiration">User Expiration</label>
                             <input type="date" class="form-control flatpickr-date" id="user_expiration"
                                 placeholder="YYYY-MM-DD" name="user_expiration" aria-describedby="user_expiration"
-                                value="" />
+                                oninput="this.value = this.value.toUpperCase()" />
+                            @error('user_expiration')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-12">
                             <div class="form-password-toggle">
                                 <label class="form-label" for="password">Password</label>
                                 <div class="input-group input-group-merge">
                                     <input id="password" class="form-control" type="password" name="password"
-                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                        aria-describedby="multicol-password2" />
+                                        placeholder="Enter Password" aria-describedby="multicol-password2" />
                                     <span class="input-group-text cursor-pointer" id="multicol-password2"><i
                                             class="ti ti-eye-off"></i></span>
+
                                 </div>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-password-toggle">
-                                <label class="form-label" for="formValidationConfirmPass">Confirm Password</label>
+                                <label class="form-label" for="confirm_password">Confirm Password</label>
                                 <div class="input-group input-group-merge">
-                                    <input class="form-control" type="password" id="formValidationConfirmPass"
-                                        name="formValidationConfirmPass"
-                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    <input class="form-control" type="password" id="confirm_password"
+                                        name="confirm_password" placeholder="Confirm Your Password"
                                         aria-describedby="multicol-confirm-password2" />
                                     <span class="input-group-text cursor-pointer" id="multicol-confirm-password2"><i
                                             class="ti ti-eye-off"></i></span>
                                 </div>
+                                @error('confirm_password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
                 </div>
                 <div class="modal-footer">
-                    {{-- <button type="button" class="btn btn-success btn-block" tabindex="3"id="confirm">Confirm</button> --}}
-                    <button type="submit" class="btn btn-primary btn-block" id="confirm">Confirm</button>
+                    <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Confirm</button>
                 </div>
+                </form>
             </div>
-            </form>
         </div>
     </div>
 
@@ -238,109 +308,58 @@
                         width="100%" class="border border-primary">
                     <button style="position: absolute; left: 7%; top: 25%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="1">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; left: 15.5%; top: 14%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="2">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; left: 25.5%; top: 13.5%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="3">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; left: 34%; top: 17.5%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="4">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; left: 42%; top: 59%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="5">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; right: 42%; top: 59%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="6">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; right: 34%; top: 17.5%;; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="7">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; right: 25.5%; top: 13.5%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="8">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; right: 15.5%; top: 14%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="9">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                     <button style="position: absolute; right:  7%; top: 25%; z-index: inherit;"
                         class="btn btn-icon rounded-circle btn-outline-primary fingers" value="10">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
+                        <i
+                            class="ti ti-circle"style="font-size: 30px; color: white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
                     </button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close_fp">Cancel</button>
                     <button type="button" class="btn btn-success" id="save_fp">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade text-left" id="hand_modal2" tabindex="-3" role="dialog" aria-labelledby="myModalLabel9"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel9">Biometrics Registration</h4>
-                    {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> --}}
-                </div>
-                <div class="modal-body">
-                    <img src="{{ asset('assets/img/hand_logo.png') }}" alt="hand" height="auto" width="100%"
-                        class="border border-primary">
-                    <button style="position: absolute; left: 5.5%; top: 21%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="1">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; left: 14.5%; top: 11%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="2">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; left: 24%; top: 11%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="3">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; left: 33%; top: 15.5%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="4">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; left: 42%; top: 59%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="5">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; right: 42%; top: 59%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="6">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; right: 33%; top: 15.5%;; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="7">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; right: 24.5%; top: 11%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="8">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; right: 14.8%; top: 11%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="9">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                    <button style="position: absolute; right:  5.5%; top: 21%; z-index: inherit;"
-                        class="btn btn-icon rounded-circle btn-outline-primary fingers2" value="10">
-                        <i data-feather="circle" class="font-large-1 text-white"></i>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close_fp2">Cancel</button>
-                    <button type="button" class="btn btn-success" id="save_fp2">Save</button>
                 </div>
             </div>
         </div>
@@ -352,9 +371,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel6">Biometrics Registration</h4>
-                    {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> --}}
                 </div>
                 <div class="modal-body" id="bio_modal_body">
 
@@ -362,28 +378,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close_bio">Cancel</button>
                     <button type="button" class="btn btn-success" id="save_bio">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade text-left" id="biometrics_modal2" tabindex="-3" role="dialog"
-        aria-labelledby="myModalLabel7" aria-hidden="true">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel7">Biometrics Registration</h4>
-                    {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> --}}
-                </div>
-                <div class="modal-body" id="bio_modal_body2">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                        id="close_bio2">Cancel</button>
-                    <button type="button" class="btn btn-success" id="save_bio2">Save</button>
                 </div>
             </div>
         </div>
@@ -412,33 +406,6 @@
         </div>
     </div>
 
-
-    <div class="modal fade text-left" id="camera2" tabindex="-2" role="dialog" aria-labelledby="myModalLabel5"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel5">Capture Image</h4>
-                    <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-body">
-                        <div class="embed-responsive embed-responsive-4by3">
-                            {{-- <iframe width="100%" frameborder="0" src="https://www.youtube-nocookie.com/embed/FdV_akxUnEM?controls=0&disablekb=1&modestbranding=1&rel=0&amp;showinfo=0&autoplay=1&loop=1" encrypted-media allowfullscreen></iframe> --}}
-                            <video width="100%" height="100%" autoplay="true" id="video2"></video>
-                        </div>
-                        <button id="capture2" type="button" class="btn btn-primary w-100 my-1"><i
-                                data-feather="camera" class="font-medium-4"></i></button>
-                        <canvas id="canvas2" style="width:100%; height:auto;" class="hidden"></canvas>
-                        <button id="saveImg2" type="button" class="btn btn-primary w-100 mt-1 hidden"
-                            data-dismiss="modal" aria-label="Close">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 @endsection

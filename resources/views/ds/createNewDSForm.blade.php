@@ -23,6 +23,12 @@
 @endsection
 
 @section('content')
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+    @endif
+
     <div class="row">
 
         <div class="col-12 mb-4">
@@ -100,8 +106,9 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6 col-xl-6">
                                     <label class="form-label" for="ds_name">DRIVING SCHOOL NAME</label>
-                                    <input name="ds_name" type="text" id="ds_name" autocapitalize="characters"
-                                        class="form-control @error('ds_name') is-invalid @enderror auto-caps"
+                                    <input name="ds_name" type="text" id="ds_name"
+                                        oninput="this.value = this.value.toUpperCase()"
+                                        class="form-control @error('ds_name') is-invalid @enderror"
                                         placeholder="DRIVING SCHOOL NAME" />
                                     @error('ds_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -121,7 +128,8 @@
                                         <label class="form-label" for="business_type">BUSINESS TYPE</label>
                                         <input type="text"
                                             class="form-control @error('business_type') is-invalid @enderror auto-caps"
-                                            id="business_type" name="business_type" placeholder="BUSINESS TYPE" />
+                                            id="business_type" name="business_type"
+                                            oninput="this.value = this.value.toUpperCase()" placeholder="BUSINESS TYPE" />
                                         @error('business_type')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -131,7 +139,8 @@
                                     <label class="form-label" for="ds_code">DRIVING SCHOOL CODE</label>
                                     <input type="text" id="ds_code"
                                         class="form-control @error('ds_code') is-invalid @enderror auto-caps"
-                                        placeholder="DRIVING SCHOOL CODE" name="ds_code" />
+                                        oninput="this.value = this.value.toUpperCase()" placeholder="DRIVING SCHOOL CODE"
+                                        name="ds_code" />
                                     @error('ds_code')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -142,6 +151,7 @@
                                             NUMBER</label>
                                         <input type="text" id="dti_accreditation_no" name="dti_accreditation_no"
                                             class="form-control @error('dti_accreditation_no') is-invalid @enderror auto-caps"
+                                            oninput="this.value = this.value.toUpperCase()"
                                             placeholder="DTI ACCREDITATION NUMBER">
                                         @error('dti_accreditation_no')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -154,6 +164,7 @@
                                             NUMBER</label>
                                         <input type="text" id="lto_accreditation_no" name="lto_accreditation_no"
                                             class="form-control @error('lto_accreditation_no') is-invalid @enderror auto-caps"
+                                            oninput="this.value = this.value.toUpperCase()"
                                             placeholder="LTO ACCREDITATION NUMBER">
                                         @error('lto_accreditation_no')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -166,7 +177,8 @@
                                         <div class="form-group">
                                             <label class="form-label" for="description">DESCRIPTION</label>
                                             <textarea id="description" name="description"
-                                                class="form-control @error('description') is-invalid @enderror auto-caps" placeholder="DESCRIPTION"></textarea>
+                                                class="form-control @error('description') is-invalid @enderror auto-caps"
+                                                oninput="this.value = this.value.toUpperCase()" placeholder="DESCRIPTION"></textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -178,7 +190,7 @@
                                         <label class="form-label" for="town_city">TOWN/CITY</label>
                                         <input type="text" id="town_city" name="town_city"
                                             class="form-control @error('town_city') is-invalid @enderror auto-caps"
-                                            placeholder="TOWN/CITY">
+                                            oninput="this.value = this.value.toUpperCase()" placeholder="TOWN/CITY">
                                         @error('town_city')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -190,7 +202,7 @@
                                         <label class="form-label" for="region">REGION</label>
                                         <input type="text" id="region" name="region"
                                             class="form-control @error('region') is-invalid @enderror auto-caps"
-                                            placeholder="REGION">
+                                            oninput="this.value = this.value.toUpperCase()" placeholder="REGION">
                                         @error('region')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -202,7 +214,7 @@
                                         <label class="form-label" for="province">PROVINCE</label>
                                         <input type="text" id="province" name="province"
                                             class="form-control @error('province') is-invalid @enderror auto-caps"
-                                            placeholder="PROVINCE">
+                                            oninput="this.value = this.value.toUpperCase()" placeholder="PROVINCE">
                                         @error('province')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

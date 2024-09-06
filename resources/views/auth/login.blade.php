@@ -136,4 +136,24 @@
             <!-- /Login -->
         </div>
     </div>
+    <div class="modal fade text-left" id="biometrics_modal" tabindex="-3" role="dialog" aria-labelledby="myModalLabel6"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel6">Biometrics Registration</h4>
+          {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> --}}
+        </div>
+        <div class="modal-body" id="bio_modal_body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_bio">Cancel</button>
+          <button type="button" class="btn btn-success" id="verify">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection

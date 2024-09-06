@@ -52,8 +52,8 @@ class DSController extends Controller
             'province' => 'required|string|max:255',
             'region' => 'required|string|max:255',
             'town_city' => 'required|string|max:255',
-            'dti_accreditation_no' => 'required|integer',
-            'lto_accreditation_no' => 'required|integer',
+            'dti_accreditation_no' => 'required|string',
+            'lto_accreditation_no' => 'required|string',
             'date_it_started' => 'required|date',
             'date_it_accredited' => 'required|date',
             'date_it_renewal' => 'required|date',
@@ -162,7 +162,7 @@ class DSController extends Controller
 
     public function updateDs(Request $request, $ds_code) 
     {
-       $request->validate([
+        $validatedData = $request->validate([
             'ds_code' => 'required|string|max:255',
             'ds_name' => 'required|string|max:255',
             'ds_contact_no' => 'required|string|max:20',
@@ -228,19 +228,21 @@ class DSController extends Controller
         ]);
     
         //Handle file uploads and store file paths
-        $filePaths = [];
-        foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $file) {
-            if ($request->hasFile($file)) {
-                $filePaths[$file] = $request->file($file)->store('uploads', 'public');
-            } else {
-                $filePaths[$file] = null;
+        
+
+        $imageFields = ['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'];
+            foreach ($imageFields as $imageField) {
+                if ($request->filled($imageField)) {
+                    // Decode base64 to binary
+                    $binaryData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->$imageField));
+                    $validatedData[$imageField] = $binaryData; // Store binary data in database
+                }
             }
-        }
     
         //Address Handler
         $cAdress = $request->input('town_city') . ', ' . $request->input('region') . ', ' . $request->input('province');
 
-        DB::transaction(function () use ($request, $ds_code, $cAdress, $filePaths) {
+        DB::transaction(function () use ($request, $ds_code, $cAdress, $validatedData) {
 
             try {
                 DB::beginTransaction();
@@ -272,13 +274,13 @@ class DSController extends Controller
                         'date_it_accreditation_renewal' => $request->input('date_it_accreditation_renewal'),
                         'date_it_authorization_renewal' => $request->input('date_it_authorization_renewal'),
 
-                        'logo_big' => $filePaths['logo_big'],
-                        'logo_small' => $filePaths['logo_small'],
-                        'ds_pic1' => $filePaths['ds_pic1'],
-                        'ds_pic2' => $filePaths['ds_pic2'],
-                        'ds_pic3' => $filePaths['ds_pic3'],
-                        'ds_pic4' => $filePaths['ds_pic4'],
-                        'ds_pic5' => $filePaths['ds_pic5'],
+                        'logo_big' => $validatedData['logo_big'],
+                        'logo_small' => $validatedData['logo_small'],
+                        'ds_pic1' => $validatedData['ds_pic1'],
+                        'ds_pic2' => $validatedData['ds_pic2'],
+                        'ds_pic3' => $validatedData['ds_pic3'],
+                        'ds_pic4' => $validatedData['ds_pic4'],
+                        'ds_pic5' => $validatedData['ds_pic5'],
                     ]);
             
                 DB::table('tb_settings')

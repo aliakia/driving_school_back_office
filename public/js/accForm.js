@@ -58,7 +58,7 @@
       backdrop: 'static',
       keyboard: false,
       backdrop: false
-  });
+    });
     $('#hand_modal').modal('show');
   });
   $('#open_cam').on('click', function () {
@@ -66,19 +66,17 @@
   });
 
   $('.fingers').on('click', function () {
-    // console.log('finger1');
-
     localStorage.setItem('fp', this.value);
-    var frameSrc =
-      '<iframe src="../biometrics/content.html" style="zoom:1.0" frameborder="0" height="400" width="100%" id="frame1"></iframe>';
-    $('#bio_modal_body').html(frameSrc);
-    $('#biometrics_modal').modal({
-      backdrop: 'static',
-      keyboard: false,
-      backdrop: false
-    });
-    // $('#biometrics_modal').modal({ show: true });
-    $('#biometrics_modal').modal('show');
+    // var frameSrc =
+    //   '<iframe src="../vuexy/biometrics/content.html" style="zoom:1.0" frameborder="0" height="400" width="100%" id="frame1"></iframe>';
+    // $('#bio_modal_body').html(frameSrc);
+    // $('#biometrics_modal').modal({
+    //   backdrop: 'static',
+    //   keyboard: false,
+    //   backdrop: false
+    // });
+    // // $('#biometrics_modal').modal({ show: true });
+    // $('#biometrics_modal').modal('show');
     var fp = localStorage.getItem('fp');
     $.ajax({
       type: 'GET',
@@ -89,6 +87,7 @@
           $('#scan_success').html('Error Scanning');
         } else if (fp == '1') {
           localStorage.setItem('fp_idl1', result);
+          console.log(result);
         } else if (fp == '2') {
           localStorage.setItem('fp_idl2', result);
         } else if (fp == '3') {
@@ -111,77 +110,35 @@
       }
     });
   });
+
+  $('#save_bio').on('click', function () {
+    $('#biometrics_modal').modal('hide');
+    var frameSrc = '';
+    $('#bio_modal_body').html(frameSrc);
+  });
+
   $('#save_fp').on('click', function () {
-    var fp_idl1 = localStorage.getItem('fp_idl1'),
-      fp_idl2 = localStorage.getItem('fp_idl2'),
-      fp_idl3 = localStorage.getItem('fp_idl3'),
-      fp_idl4 = localStorage.getItem('fp_idl4'),
-      fp_idl5 = localStorage.getItem('fp_idl5'),
-      fp_idr1 = localStorage.getItem('fp_idr1'),
-      fp_idr2 = localStorage.getItem('fp_idr2'),
-      fp_idr3 = localStorage.getItem('fp_idr3'),
-      fp_idr4 = localStorage.getItem('fp_idr4'),
-      fp_idr5 = localStorage.getItem('fp_idr5');
-    if (fp_idl1 != '' || fp_idl1 != null) {
-      $('#fp_idl1').val(fp_idl1);
-    } else {
-      let fp = '1';
-      errorMessage(fp);
-    }
-    if (fp_idl2 != '' || fp_idl2 != null) {
-      $('#fp_idl2').val(fp_idl2);
-    } else {
-      let fp = '2';
-      errorMessage(fp);
-    }
-    if (fp_idl3 != '' || fp_idl3 != null) {
-      $('#fp_idl3').val(fp_idl3);
-    } else {
-      let fp = '3';
-      errorMessage(fp);
-    }
-    if (fp_idl4 != '' || fp_idl4 != null) {
-      $('#fp_idl4').val(fp_idl4);
-    } else {
-      let fp = '4';
-      errorMessage(fp);
-    }
-    if (fp_idl5 != '' || fp_idl5 != null) {
-      $('#fp_idl5').val(fp_idl5);
-    } else {
-      let fp = '5';
-      errorMessage(fp);
-    }
-    if (fp_idr1 != '' || fp_idr1 != null) {
-      $('#fp_idr1').val(fp_idr1);
-    } else {
-      let fp = '6';
-      errorMessage(fp);
-    }
-    if (fp_idr2 != '' || fp_idr2 != null) {
-      $('#fp_idr2').val(fp_idr2);
-    } else {
-      let fp = '7';
-      errorMessage(fp);
-    }
-    if (fp_idr3 != '' || fp_idr3 != null) {
-      $('#fp_idr3').val(fp_idr3);
-    } else {
-      let fp = '8';
-      errorMessage(fp);
-    }
-    if (fp_idr4 != '' || fp_idr4 != null) {
-      $('#fp_idr4').val(fp_idr4);
-    } else {
-      let fp = '9';
-      errorMessage(fp);
-    }
-    if (fp_idr5 != '' || fp_idr5 != null) {
-      $('#fp_idr5').val(fp_idr5);
-    } else {
-      let fp = '10';
-      errorMessage(fp);
-    }
+    var fingerprintData = {
+      fp_idl1: localStorage.getItem('fp_idl1'),
+      fp_idl2: localStorage.getItem('fp_idl2'),
+      fp_idl3: localStorage.getItem('fp_idl3'),
+      fp_idl4: localStorage.getItem('fp_idl4'),
+      fp_idl5: localStorage.getItem('fp_idl5'),
+      fp_idr1: localStorage.getItem('fp_idr1'),
+      fp_idr2: localStorage.getItem('fp_idr2'),
+      fp_idr3: localStorage.getItem('fp_idr3'),
+      fp_idr4: localStorage.getItem('fp_idr4'),
+      fp_idr5: localStorage.getItem('fp_idr5')
+    };
+
+    $.each(fingerprintData, function (key, value) {
+      if (value !== null && value !== '') {
+        $('#' + key).val(value);
+      }
+    });
+
+    console.log(fingerprintData);
+
     $('#hand_modal').modal('hide');
   });
 
@@ -214,37 +171,36 @@
   $('#capture').on('click', function () {
     capture();
   });
-  // $('#saveImg').on('click', function () {
-  //   // save();
-  // });
+  $('#saveImg').on('click', function () {
+    save();
+  });
 
-  // function capture() {
-  //   // var canvas = $('#canvas');
-  //   // Webcam.snap( function(data_uri) {
-  //   //     canvas.attr('src', data_uri);
-  //   //     $('#canvas').removeClass('hidden');
-  //   //     $('#saveImg').removeClass('hidden');
-  //   // });
-  //   var canvas = document.getElementById('canvas');
-  //   var video = document.getElementById('video');
-  //   canvas.width = 640;
-  //   canvas.height = 480;
-  //   canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
-  //   $('#canvas').removeClass('hidden');
-  //   $('#saveImg').removeClass('hidden');
-  // }
-  // function save() {
-  //   // var base_64 = $('#canvas').attr('src');
-  //   // $('#picture_1').attr('src', base_64);
-  //   // $('#base_64').val(base_64);
-  //   // $('#canvas').addClass('hidden');
-  //   // $('#saveImg').addClass('hidden');
-  //   document.getElementById('picture_1').src = canvas.toDataURL();
-  //   $('#base_64').val(canvas.toDataURL());
-  //   $('#canvas').addClass('hidden');
-  //   $('#saveImg').addClass('hidden');
-  // }
-
+  function capture() {
+    var canvas = $('#canvas');
+    Webcam.snap(function (data_uri) {
+      canvas.attr('src', data_uri);
+      $('#canvas').removeClass('hidden');
+      $('#saveImg').removeClass('hidden');
+    });
+    var canvas = document.getElementById('canvas');
+    var video = document.getElementById('video');
+    canvas.width = 640;
+    canvas.height = 480;
+    canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+    $('#canvas').removeClass('hidden');
+    $('#saveImg').removeClass('hidden');
+  }
+  function save() {
+    var base_64 = $('#canvas').attr('src');
+    // $('#picture_1').attr('src', base_64);
+    // $('#base_64').val(base_64);
+    // $('#canvas').addClass('hidden');
+    // $('#saveImg').addClass('hidden');
+    document.getElementById('picture_1').src = canvas.toDataURL();
+    $('#base_64').val(canvas.toDataURL());
+    $('#canvas').addClass('hidden');
+    $('#saveImg').addClass('hidden');
+  }
   const select2 = $('.select2'),
     basicPickr = $('.flatpickr-date');
 
@@ -307,10 +263,6 @@
           validators: {
             notEmpty: {
               message: 'This field is required'
-            },
-            regexp: {
-              regexp: /^[a-zA-Z0-9 ]+$/,
-              message: 'The name can only consist of alphabetical, number and space'
             }
           }
         },
@@ -349,6 +301,14 @@
             }
           }
         },
+        password: {
+          validators: {
+            stringLength: {
+              min: 5,
+              message: 'The password must be more than 5 characters long'
+            }
+          }
+        },
 
         formValidationConfirmPass: {
           validators: {
@@ -381,7 +341,6 @@
         });
       }
     }).on('core.form.valid', function () {
-      // Jump to the next step when all fields in the current step are valid
       validationStepper.next();
     });
 
@@ -436,11 +395,9 @@
         submitButton: new FormValidation.plugins.SubmitButton()
       }
     }).on('core.form.valid', function () {
-      // Jump to the next step when all fields in the current step are valid
       validationStepper.next();
     });
 
-    // Social links
     const FormValidation3 = FormValidation.formValidation(wizardValidationFormStep3, {
       fields: {
         checkBox: {
@@ -462,7 +419,6 @@
       }
     }).on('core.form.valid', function () {
       window.location.href = homeUrl;
-      // console.log('fdfd');
     });
 
     wizardValidationNext.forEach(item => {

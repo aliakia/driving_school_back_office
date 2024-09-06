@@ -1,10 +1,5 @@
-/**
- * DataTables Basic
- */
-
 'use strict';
 
-// datatable (jquery)
 $(document).ready(function () {
   const select2 = $('.select2'),
     basicPickr = $('.flatpickr-date');
@@ -65,7 +60,8 @@ $(document).ready(function () {
             var $type = {
               instructor: { title: 'Instructor', class: 'bg-label-warning' },
               encoder: { title: 'Encoder', class: 'bg-label-info' },
-              administrator: { title: 'Administrator', class: 'bg-label-danger' }
+              administrator: { title: 'Administrator', class: 'bg-label-danger' },
+              tech_support: { title: 'Tech Support', class: 'bg-label-success' }
             };
 
             if (typeof $type[$type_text] === 'undefined') {
@@ -92,7 +88,7 @@ $(document).ready(function () {
               '<li><a href="' +
               editUrl +
               '" class="dropdown-item mx-2 text-primary align-center"><i class="ti ti-pencil me-3"></i>Edit</a></li>' +
-             '<li><form action="' +
+              '<li><form action="' +
               deleteUrl +
               '" method="POST" style="display:inline;" class="delete-form">' +
               '<input type="hidden" name="_token" value="' +
@@ -131,48 +127,46 @@ $(document).ready(function () {
     var form = $(this).closest('form'); // Get the form
 
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        customClass: {
-            confirmButton: 'btn btn-primary me-3',
-            cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
     }).then(function (result) {
-        if (result.isConfirmed) {
-            form.submit(); // Submit the form if confirmed
-            Swal.fire({
-                icon: 'success',
-                title: 'Deleted!',
-                text: 'Your record has been deleted.',
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire({
-                title: 'Cancelled',
-                text: 'Your record is safe :)',
-                icon: 'error',
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            });
-        }
+      if (result.isConfirmed) {
+        form.submit(); // Submit the form if confirmed
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your record has been deleted.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelled',
+          text: 'Your record is safe :)',
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
     });
-});
-
-  $('#open_bio').on('click', function () {
-    $('#hand_modal').modal('show');
-  });
-  $('#open_cam').on('click', function () {
-    $('#camera').modal('show');
   });
 
   $('#open_bio').on('click', function () {
+    $('#hand_modal').modal({
+      backdrop: 'static',
+      keyboard: false,
+      backdrop: false
+    });
     $('#hand_modal').modal('show');
   });
   $('#open_cam').on('click', function () {
@@ -180,19 +174,7 @@ $(document).ready(function () {
   });
 
   $('.fingers').on('click', function () {
-    // console.log('finger1');
-
     localStorage.setItem('fp', this.value);
-    var frameSrc =
-      '<iframe src="../biometrics/content.html" style="zoom:1.0" frameborder="0" height="400" width="100%" id="frame1"></iframe>';
-    $('#bio_modal_body').html(frameSrc);
-    $('#biometrics_modal').modal({
-      backdrop: 'static',
-      keyboard: false,
-      backdrop: false
-    });
-    // $('#biometrics_modal').modal({ show: true });
-    $('#biometrics_modal').modal('show');
     var fp = localStorage.getItem('fp');
     $.ajax({
       type: 'GET',
@@ -203,6 +185,7 @@ $(document).ready(function () {
           $('#scan_success').html('Error Scanning');
         } else if (fp == '1') {
           localStorage.setItem('fp_idl1', result);
+          console.log(result);
         } else if (fp == '2') {
           localStorage.setItem('fp_idl2', result);
         } else if (fp == '3') {
@@ -225,77 +208,35 @@ $(document).ready(function () {
       }
     });
   });
+
+  $('#save_bio').on('click', function () {
+    $('#biometrics_modal').modal('hide');
+    var frameSrc = '';
+    $('#bio_modal_body').html(frameSrc);
+  });
+
   $('#save_fp').on('click', function () {
-    var fp_idl1 = localStorage.getItem('fp_idl1'),
-      fp_idl2 = localStorage.getItem('fp_idl2'),
-      fp_idl3 = localStorage.getItem('fp_idl3'),
-      fp_idl4 = localStorage.getItem('fp_idl4'),
-      fp_idl5 = localStorage.getItem('fp_idl5'),
-      fp_idr1 = localStorage.getItem('fp_idr1'),
-      fp_idr2 = localStorage.getItem('fp_idr2'),
-      fp_idr3 = localStorage.getItem('fp_idr3'),
-      fp_idr4 = localStorage.getItem('fp_idr4'),
-      fp_idr5 = localStorage.getItem('fp_idr5');
-    if (fp_idl1 != '' || fp_idl1 != null) {
-      $('#fp_idl1').val(fp_idl1);
-    } else {
-      let fp = '1';
-      errorMessage(fp);
-    }
-    if (fp_idl2 != '' || fp_idl2 != null) {
-      $('#fp_idl2').val(fp_idl2);
-    } else {
-      let fp = '2';
-      errorMessage(fp);
-    }
-    if (fp_idl3 != '' || fp_idl3 != null) {
-      $('#fp_idl3').val(fp_idl3);
-    } else {
-      let fp = '3';
-      errorMessage(fp);
-    }
-    if (fp_idl4 != '' || fp_idl4 != null) {
-      $('#fp_idl4').val(fp_idl4);
-    } else {
-      let fp = '4';
-      errorMessage(fp);
-    }
-    if (fp_idl5 != '' || fp_idl5 != null) {
-      $('#fp_idl5').val(fp_idl5);
-    } else {
-      let fp = '5';
-      errorMessage(fp);
-    }
-    if (fp_idr1 != '' || fp_idr1 != null) {
-      $('#fp_idr1').val(fp_idr1);
-    } else {
-      let fp = '6';
-      errorMessage(fp);
-    }
-    if (fp_idr2 != '' || fp_idr2 != null) {
-      $('#fp_idr2').val(fp_idr2);
-    } else {
-      let fp = '7';
-      errorMessage(fp);
-    }
-    if (fp_idr3 != '' || fp_idr3 != null) {
-      $('#fp_idr3').val(fp_idr3);
-    } else {
-      let fp = '8';
-      errorMessage(fp);
-    }
-    if (fp_idr4 != '' || fp_idr4 != null) {
-      $('#fp_idr4').val(fp_idr4);
-    } else {
-      let fp = '9';
-      errorMessage(fp);
-    }
-    if (fp_idr5 != '' || fp_idr5 != null) {
-      $('#fp_idr5').val(fp_idr5);
-    } else {
-      let fp = '10';
-      errorMessage(fp);
-    }
+    var fingerprintData = {
+      fp_idl1: localStorage.getItem('fp_idl1'),
+      fp_idl2: localStorage.getItem('fp_idl2'),
+      fp_idl3: localStorage.getItem('fp_idl3'),
+      fp_idl4: localStorage.getItem('fp_idl4'),
+      fp_idl5: localStorage.getItem('fp_idl5'),
+      fp_idr1: localStorage.getItem('fp_idr1'),
+      fp_idr2: localStorage.getItem('fp_idr2'),
+      fp_idr3: localStorage.getItem('fp_idr3'),
+      fp_idr4: localStorage.getItem('fp_idr4'),
+      fp_idr5: localStorage.getItem('fp_idr5')
+    };
+
+    $.each(fingerprintData, function (key, value) {
+      if (value !== null && value !== '') {
+        $('#' + key).val(value);
+      }
+    });
+
+    console.log(fingerprintData);
+
     $('#hand_modal').modal('hide');
   });
 
@@ -327,5 +268,77 @@ $(document).ready(function () {
 
   $('#capture').on('click', function () {
     capture();
+  });
+  $('#saveImg').on('click', function () {
+    save();
+  });
+
+  function capture() {
+    var canvas = $('#canvas');
+    Webcam.snap(function (data_uri) {
+      canvas.attr('src', data_uri);
+      $('#canvas').removeClass('hidden');
+      $('#saveImg').removeClass('hidden');
+    });
+    var canvas = document.getElementById('canvas');
+    var video = document.getElementById('video');
+    canvas.width = 640;
+    canvas.height = 480;
+    canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+    $('#canvas').removeClass('hidden');
+    $('#saveImg').removeClass('hidden');
+  }
+  function save() {
+    var base_64 = $('#canvas').attr('src');
+    // $('#picture_1').attr('src', base_64);
+    // $('#base_64').val(base_64);
+    // $('#canvas').addClass('hidden');
+    // $('#saveImg').addClass('hidden');
+    document.getElementById('picture_1').src = canvas.toDataURL();
+    $('#base_64').val(canvas.toDataURL());
+    $('#canvas').addClass('hidden');
+    $('#saveImg').addClass('hidden');
+  }
+
+  $('#submit-btn').on('click', function (e) {
+    e.preventDefault();
+
+    const requiredFields = [
+      '#recno',
+      '#user_id',
+      '#first_name',
+      '#last_name',
+      '#gender',
+      '#user_type',
+      '#is_active',
+      '#ds_code',
+      '#certificate_tesda',
+      '#certificate_tesda_expiration',
+      '#user_expiration'
+    ];
+
+    const allFilled = requiredFields.every(id => $(id).val().trim());
+
+    const password = $('#password').val();
+    const confirmPassword = $('#confirm_password').val();
+
+    if (allFilled && password === confirmPassword) {
+      Swal.fire({
+        title: 'Success!',
+        text: 'Create Account?',
+        icon: 'success',
+        customClass: { confirmButton: 'btn btn-success' },
+        buttonsStyling: false
+      }).then(() => $('#reg_form').submit());
+    } else {
+      const errorMsg = !allFilled ? 'Please fill in all the required fields.' : 'Passwords do not match.';
+      Swal.fire({
+        title: 'Error!',
+        text: errorMsg,
+        icon: 'warning',
+        customClass: { confirmButton: 'btn btn-primary' },
+        buttonsStyling: false
+      });
+    }
   });
 });
