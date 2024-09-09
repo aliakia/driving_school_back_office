@@ -18,11 +18,23 @@
       case 'is_active':
         displayValue = value == 1 ? 'Active' : 'Inactive';
         break;
-      case 'is_with_pos':
-        displayValue = value == 1 ? 'With POS' : 'Without POS';
+      case 'gender':
+        displayValue = value == 'FEMALE' ? 'Female' : 'Male';
         break;
-      case 'is_live':
-        displayValue = value == 1 ? 'Live' : 'Not Live';
+      case 'user_type':
+        if (value == 'encoder') {
+          displayValue = 'Encoder';
+        }
+        if (value == 'tech_support') {
+          displayValue = 'Tech Support';
+        }
+        if (value == 'administration') {
+          displayValue = 'Administration';
+        }
+        if (value == 'instructor') {
+          displayValue = 'Instructor';
+        }
+
         break;
       default:
         displayValue = value;
@@ -109,6 +121,11 @@
         }
       }
     });
+  });
+
+  $('#close_fp').on('click', function () {
+    localStorage.clear();
+    $('#hand_modal').modal('hide');
   });
 
   $('#save_bio').on('click', function () {
@@ -241,17 +258,13 @@
     // Account details
     const FormValidation1 = FormValidation.formValidation(wizardValidationFormStep1, {
       fields: {
-        recno: {
-          validators: {
-            notEmpty: {
-              message: 'This field is required'
-            },
-            regexp: {
-              regexp: /^[a-zA-Z0-9 ]+$/,
-              message: 'The name can only consist of alphabetical, number and space'
-            }
-          }
-        },
+        // recno: {
+        //   validators: {
+        //     notEmpty: {
+        //       message: 'This field is required'
+        //     },
+        //   }
+        // },
         user_id: {
           validators: {
             notEmpty: {
@@ -266,13 +279,13 @@
             }
           }
         },
-        ds_code: {
-          validators: {
-            notEmpty: {
-              message: 'This field is required'
-            }
-          }
-        },
+        // ds_code: {
+        //   validators: {
+        //     notEmpty: {
+        //       message: 'This field is required'
+        //     }
+        //   }
+        // },
         certificate_tesda_expiration: {
           validators: {
             notEmpty: {
@@ -291,6 +304,13 @@
           validators: {
             notEmpty: {
               message: 'This field is required'
+            }
+          }
+        },
+        user_type: {
+          validators: {
+            notEmpty: {
+              message: 'The user type is required'
             }
           }
         },
@@ -372,13 +392,6 @@
           validators: {
             notEmpty: {
               message: 'The gender is required'
-            }
-          }
-        },
-        user_type: {
-          validators: {
-            notEmpty: {
-              message: 'The user type is required'
             }
           }
         }

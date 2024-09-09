@@ -27,6 +27,21 @@
 @endsection
 
 @section('content')
+    @if ($errors->any())
+        <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+            <div class="toast-header">
+                <i class="ti ti-bell ti-xs me-2 text-danger"></i>
+                <div class="me-auto fw-semibold">Account not created!</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        </div>
+    @endif
     <!-- Default -->
     <div class="row">
 
@@ -81,12 +96,12 @@
                                 <small>Enter Your Account Details.</small>
                             </div>
                             <div class="row g-3">
-                                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
+                                {{-- <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <label class="form-label" for="recno">Rec No</label>
                                     <input type="text" name="recno" id="recno" class="form-control"
                                         value="{{ old('recno', $selectedAcc->recno) }}"
                                         oninput="this.value = this.value.toUpperCase()" />
-                                </div>
+                                </div> --}}
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <label class="form-label" for="user_id">User ID</label>
                                     <input type="text" name="user_id" id="user_id" class="form-control"
@@ -100,9 +115,12 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <label class="form-label" for="ds_code">DS Code</label>
-                                    <input type="text" name="ds_code" id="ds_code" class="form-control"
-                                        value="{{ old('ds_code', $selectedAcc->ds_code) }}"
-                                        oninput="this.value = this.value.toUpperCase()" />
+                                    <select id="ds_code" class="select2 form-select form-select-lg" name="ds_code">
+                                        <option selected>{{ old('ds_code', $selectedAcc->ds_code) }}</option>
+                                        @foreach ($ds_codes as $code)
+                                            <option value="{{ $code }}">{{ $code }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <label class="form-label" for="certificate_tesda">Tesda Certificate</label>
@@ -138,6 +156,24 @@
                                         @enderror
 
                                     </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
+                                    <label class="form-label" for="user_type">User Type</label>
+                                    <select id="user_type" name="user_type" class="form-control select2">
+                                        <option selected disabled>Select User Type</option>
+                                        <option value="administrator"
+                                            {{ old('user_type', $selectedAcc->user_type) == 'administrator' ? 'selected' : '' }}>
+                                            Administrator</option>
+                                        <option value="instructor"
+                                            {{ old('user_type', $selectedAcc->user_type) == 'instructor' ? 'selected' : '' }}>
+                                            Instructor</option>
+                                        <option value="encoder"
+                                            {{ old('user_type', $selectedAcc->user_type) == 'encoder' ? 'selected' : '' }}>
+                                            Encoder</option>
+                                        <option value="tech_support"
+                                            {{ old('user_type', $selectedAcc->user_type) == 'tech_support' ? 'selected' : '' }}>
+                                            Tech Support</option>
+                                    </select>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <div class="form-group mb-2">
@@ -238,24 +274,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
-                                    <label class="form-label" for="user_type">User Type</label>
-                                    <select id="user_type" name="user_type" class="form-control select2">
-                                        <option selected disabled>Select User Type</option>
-                                        <option value="administrator"
-                                            {{ old('user_type', $selectedAcc->user_type) == 'administrator' ? 'selected' : '' }}>
-                                            Administrator</option>
-                                        <option value="instructor"
-                                            {{ old('user_type', $selectedAcc->user_type) == 'instructor' ? 'selected' : '' }}>
-                                            Instructor</option>
-                                        <option value="encoder"
-                                            {{ old('user_type', $selectedAcc->user_type) == 'encoder' ? 'selected' : '' }}>
-                                            Encoder</option>
-                                        <option value="tech_support"
-                                            {{ old('user_type', $selectedAcc->user_type) == 'tech_support' ? 'selected' : '' }}>
-                                            Tech Support</option>
-                                    </select>
-                                </div>
+
 
                                 <div class="col-12 col-xl-6 mb-3">
                                     <label class="form-label" for="description">Description</label>
@@ -352,7 +371,7 @@
                                         <div class="col-xl-12">
                                             <ul class="list-unstyled">
                                                 <li class="row">
-                                                    <strong class="col-xl-7 col-6">First Namel:</strong>
+                                                    <strong class="col-xl-7 col-6">First Name:</strong>
                                                     <span class="col-xl-5 col-6"
                                                         id="preview-first_name">{{ $selectedAcc->first_name }}</span>
                                                 </li>
@@ -373,8 +392,24 @@
                                                 </li>
                                                 <li class="row">
                                                     <strong class="col-xl-7 col-6">User Type:</strong>
-                                                    <span class="col-xl-5 col-6"
-                                                        id="preview-user_type">{{ $selectedAcc->user_type }}</span>
+
+                                                    @if ($selectedAcc->user_type == 'tech_support')
+                                                        <span class="col-xl-5 col-6 capitalize"
+                                                            id="preview-user_type">Technical Support</span>
+                                                    @elseif ($selectedAcc->user_type == 'instructor')
+                                                        <span class="col-xl-5 col-6 capitalize"
+                                                            id="preview-user_type">Instructor</span>
+                                                    @elseif ($selectedAcc->user_type == 'encoder')
+                                                        <span class="col-xl-5 col-6 capitalize"
+                                                            id="preview-user_type">Encoder</span>
+                                                    @elseif ($selectedAcc->user_type == 'administrator')
+                                                        <span class="col-xl-5 col-6 capitalize"
+                                                            id="preview-user_type">Administrator</span>
+                                                    @else
+                                                        <span class="col-xl-5 col-6 capitalize" id="preview-user_type">No
+                                                            User Type</span>
+                                                    @endif
+
                                                 </li>
                                                 <li class="row">
                                                     <strong class="col-xl-7 col-6">Description:</strong>
@@ -473,7 +508,7 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close_fp">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_fp">Cancel</button>
                     <button type="button" class="btn btn-success" id="save_fp">Save</button>
                 </div>
             </div>

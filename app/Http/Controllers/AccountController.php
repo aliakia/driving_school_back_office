@@ -20,7 +20,11 @@ class AccountController extends Controller
     public function index() {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
+        $user_type = $loggedUser->user_type;
 
+        $ds_codes = DB::table('tb_ds')->pluck('ds_code');
+
+        // dd($ds_codes);
         // $accounts = DB::table('tb_users')
         $accounts = DB::table('tb_users')
                     ->select(
@@ -37,13 +41,15 @@ class AccountController extends Controller
         return view('accounts.accountList', [
             'first_name' => $first_name,
             'accounts' => $accounts,
+            'ds_codes' => $ds_codes,
+            'user_type' => $user_type,
         ]);
     }
 
    
     public function createAccount(Request $request) {
         $validatedData = $request->validate([
-            'recno' => 'required',
+            // 'recno' => 'required',
             'user_id' => 'required',
             'employee_id' => 'required',
             'password' => 'required|min:5', // Ensure minimum length for the password
@@ -52,7 +58,7 @@ class AccountController extends Controller
             'last_name' => 'required',
             'gender' => 'required',
             'user_type' => 'required',
-            'ds_code' => 'required',
+            'ds_code' => 'nullable',
             'certificate_tesda' => 'required',
             'certificate_tesda_expiration' => 'required',
             'is_active' => 'required',
@@ -80,6 +86,8 @@ class AccountController extends Controller
             'fp_id_img_r1' => 'nullable',
         ]);
 
+        
+
         $validator = FacadesValidator::make($request->all(), [
             'confirm_password' => 'required|same:password'
         ]);
@@ -91,7 +99,7 @@ class AccountController extends Controller
         // Encrypt password
         $_password = $request->password;
         $_enc_password = hash("sha512", $_password);
-        $validatedData['password'] = $_enc_password;
+        $validatedData['password'] = strtoupper($_enc_password);
 
         // Process image fields
         // $imageFields = ['pic_id1', 'pic_id2', 'pic_id3', 'pic_id4', 'pic_id5'];
@@ -118,7 +126,7 @@ class AccountController extends Controller
             return redirect()->route('accounts')->with('success', 'Account created successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return redirect()->route('accounts')->with('error', 'There was an error creating account.');
         }
     }
@@ -127,101 +135,118 @@ class AccountController extends Controller
     public function viewEditForm($user_id){
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
+        $user_type = $loggedUser->user_type;
+
+        $ds_codes = DB::table('tb_ds')->pluck('ds_code');
         $selectedAcc = DB::table('tb_users')->where('user_id', $user_id)->first();
         return view('accounts.editAccountForm', [
             'selectedAcc' => $selectedAcc,
             'first_name' => $first_name,
+            'ds_codes' => $ds_codes,
+            'user_type' => $user_type,
         ]);
     }
 
-        public function editAccount(Request $request, $user_id) {
+    public function editAccount(Request $request, $user_id) {
 
-            $validatedData = $request->validate([
-                'recno' => 'required',
-                'user_id' => 'required',
-                'employee_id' => 'required',
-                'first_name' => 'required',
-                'middle_name' => 'required',
-                'last_name' => 'required',
-                'gender' => 'required',
-                'user_type' => 'required',
-                'ds_code' => 'required',
-                'certificate_tesda' => 'required',
-                'certificate_tesda_expiration' => 'required',
-                'is_active' => 'required',
-                'description' => 'nullable',
-                'user_expiration' => 'required',
-                'password' => 'nullable',
+        $validatedData = $request->validate([
+            // 'recno' => 'required',
+            'user_id' => 'required',
+            'employee_id' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
+            'gender' => 'required',
+            'user_type' => 'required',
+            'ds_code' => 'nullable',
+            'certificate_tesda' => 'required',
+            'certificate_tesda_expiration' => 'required',
+            'is_active' => 'required',
+            'description' => 'nullable',
+            'user_expiration' => 'required',
+            'password' => 'nullable',
+    
+            // other fields
+            'pic_id1' => 'nullable',
+            'pic_id2' => 'nullable',
+            'pic_id3' => 'nullable',
+            'pic_id4' => 'nullable',
+            'pic_id5' => 'nullable',
+            'fp_idl1' => 'nullable|string',
+            'fp_idl2' => 'nullable|string',
+            'fp_idl3' => 'nullable|string',
+            'fp_idl4' => 'nullable|string',
+            'fp_idl5' => 'nullable|string',
+            'fp_idr1' => 'nullable|string',
+            'fp_idr2' => 'nullable|string',
+            'fp_idr3' => 'nullable|string',
+            'fp_idr4' => 'nullable|string',
+            'fp_idr5' => 'nullable|string',
+            'rfid' => 'nullable',
+            'fp_id_str_r1' => 'nullable',
+            'fp_id_str_r2' => 'nullable',
+            'fp_id_str_r3' => 'nullable',
+            'fp_id_str_r4' => 'nullable',
+            'fp_id_str_r5' => 'nullable',
+            'fp_id_str_l1' => 'nullable',
+            'fp_id_str_l2' => 'nullable',
+            'fp_id_str_l3' => 'nullable',
+            'fp_id_str_l4' => 'nullable',
+            'fp_id_str_l5' => 'nullable',
+            'fp_id_img_r1' => 'nullable',
+            'fp_id_img_r2' => 'nullable',
+            'fp_id_img_r3' => 'nullable',
+            'fp_id_img_r4' => 'nullable',
+            'fp_id_img_r5' => 'nullable',
+            'fp_id_img_l1' => 'nullable',
+            'fp_id_img_l2' => 'nullable',
+            'fp_id_img_l3' => 'nullable',
+            'fp_id_img_l4' => 'nullable',
+            'fp_id_img_l5' => 'nullable',
+        ]);
+       
+    
+        DB::transaction(function () use ($user_id, $validatedData, $request) {
+            try {
+                $user = DB::table('tb_users')->where('user_id', $user_id)->first();
         
-                // other fields
-                'pic_id1' => 'nullable',
-                'pic_id2' => 'nullable',
-                'pic_id3' => 'nullable',
-                'pic_id4' => 'nullable',
-                'pic_id5' => 'nullable',
-                'fp_idl1' => 'nullable|string',
-                'fp_idl2' => 'nullable|string',
-                'fp_idl3' => 'nullable|string',
-                'fp_idl4' => 'nullable|string',
-                'fp_idl5' => 'nullable|string',
-                'fp_idr1' => 'nullable|string',
-                'fp_idr2' => 'nullable|string',
-                'fp_idr3' => 'nullable|string',
-                'fp_idr4' => 'nullable|string',
-                'fp_idr5' => 'nullable|string',
-                'rfid' => 'nullable',
-                'fp_id_str_r1' => 'nullable',
-                'fp_id_str_r2' => 'nullable',
-                'fp_id_str_r3' => 'nullable',
-                'fp_id_str_r4' => 'nullable',
-                'fp_id_str_r5' => 'nullable',
-                'fp_id_str_l1' => 'nullable',
-                'fp_id_str_l2' => 'nullable',
-                'fp_id_str_l3' => 'nullable',
-                'fp_id_str_l4' => 'nullable',
-                'fp_id_str_l5' => 'nullable',
-                'fp_id_img_r1' => 'nullable',
-                'fp_id_img_r2' => 'nullable',
-                'fp_id_img_r3' => 'nullable',
-                'fp_id_img_r4' => 'nullable',
-                'fp_id_img_r5' => 'nullable',
-                'fp_id_img_l1' => 'nullable',
-                'fp_id_img_l2' => 'nullable',
-                'fp_id_img_l3' => 'nullable',
-                'fp_id_img_l4' => 'nullable',
-                'fp_id_img_l5' => 'nullable',
-            ]);
+                if ($request->filled('old_password')) {
+                    $old_password = $request->old_password;
+                    $old_enc_password = hash("sha512", $old_password);
         
-            $user = DB::table('tb_users')->where('user_id', $user_id)->first();
+                    if (strtoupper($old_enc_password) !== $user->password) {
+                        return back()->with('error', 'Old password is incorrect.');
+                    }
         
-            if ($request->filled('old_password')) {
-                $_password = $request->old_password;
-                $_enc_password = hash("sha512", $_password);
+                    if ($request->filled('password')) {
+                        $_password = $request->password;
+                        $_enc_password = hash("sha512", $_password);
+                        $validatedData['password'] = strtoupper($_enc_password);
+                    } else {
+                        unset($validatedData['password']);
+                    }
+                } else {
+                    unset($validatedData['password']);
+                }
+
+                $biometricFields = ['fp_idl1', 'fp_idl2', 'fp_idl3', 'fp_idl4', 'fp_idl5', 'fp_idr1', 'fp_idr2', 'fp_idr3', 'fp_idr4', 'fp_idr5'];
         
-                if (strtoupper($_enc_password) !== strtoupper($user->password)) {
-                    return back()->withErrors([
-                        'old_password' => 'The provided password does not match your current password.',
-                    ]);
+                foreach ($biometricFields as $field) {
+                    if (!$request->filled($field)) {
+                        unset($validatedData[$field]);
+                    }
                 }
         
-                if ($request->filled('password')) {
-                    $_password = $request->password;
-                    $_enc_password = hash("sha512", $_password);
-                    $validatedData['password'] = $_enc_password;
-                }
+                DB::table('tb_users')->where('user_id', $user_id)->update($validatedData);
+            } catch (\Throwable $th) {
+                return back()->with('error', 'Account info not updated');
             }
+        });
         
-            DB::transaction(function () use ($user_id, $validatedData) {
-                try {
-                    DB::table('tb_users')->where('user_id', $user_id)->update($validatedData);
-                } catch (\Throwable $th) {
-                        DB::rollBack();
-                    throw $th;
-                }
-            });
         
-            return redirect()->route('accounts')->with('success', 'Account updated successfully.');
-        }
+    
+        return redirect()->route('accounts')->with('success', 'Account updated successfully.');
+    }
     
 
     public function deleteAccount($user_id){

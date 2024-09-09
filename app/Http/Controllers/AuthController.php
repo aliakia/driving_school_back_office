@@ -33,22 +33,21 @@ class AuthController extends Controller
     
         if (!$user) {
             return back()->withErrors([
-                'login_error' => 'No User Found.',
+                'user_id' => 'No user id found.',
             ]);            
         }
-    
-        // Check if the password is correct
+        // dd($_enc_password);
+        
         if (strtoupper($_enc_password) !== $user->password) {
             return back()->withErrors([
-                'login_error' => 'Password is wrong.',
+                'password' => 'Password is wrong.',
             ]); 
         }
-    
-        // Check if the user is active
-        if ($user->is_active === 0) {
+
+        if (!$user->is_active) {
             return back()->withErrors([
-                'login_error' => 'User is not Active.',
-            ]); 
+                'user_id' => 'User is not active.',
+            ]);    
         }
     
         $request->session()->put('logged_in', $user);

@@ -19,6 +19,7 @@ class DSController extends Controller
     public function index() {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
+        $user_type = $loggedUser->user_type;
 
 
         $all_ds = DB::table('tb_ds')
@@ -31,14 +32,17 @@ class DSController extends Controller
         return view('ds.viewList', [
             'all_ds' => $all_ds,
             'first_name' => $first_name,
+            'user_type' => $user_type,
         ]);
     }
 
     public function viewCreateForm() {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
+        $user_type = $loggedUser->user_type;
         return view('ds.createNewDSForm', [
             'first_name' => $first_name,
+            'user_type' => $user_type,
         ]);
     }
 
@@ -146,6 +150,8 @@ class DSController extends Controller
     public function viewEditForm($ds_code) {
         $loggedUser = session('logged_in');
         $first_name = $loggedUser->first_name;
+        $user_type = $loggedUser->user_type;
+
         // $ds_code = 'DS_001';
         $selectedDs = DB::table('tb_ds')->where('ds_code', $ds_code)->first();
         $dsSetting = DB::table('tb_settings')->where('ds_code', $ds_code)->first();
@@ -155,6 +161,7 @@ class DSController extends Controller
             'selectedDs' => $selectedDs,
             'dsSetting' => $dsSetting,
             'first_name' => $first_name,
+            'user_type' => $user_type,
         ]);
 
         //return dd($selectedDs);

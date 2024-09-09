@@ -56,13 +56,13 @@
 @endsection
 
 @section('content')
+
     @if ($errors->any())
         <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
             style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
             <div class="toast-header">
                 <i class="ti ti-bell ti-xs me-2 text-danger"></i>
                 <div class="me-auto fw-semibold">Account not created!</div>
-                <small class="text-muted">{{ now()->diffForHumans() }}</small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
@@ -119,14 +119,14 @@
                             <input id="fp_idr5" type="hidden" name="fp_idr5" value="" />
                         </div>
 
-                        <div class="form-group mb-2">
+                        {{-- <div class="form-group mb-2">
                             <label class="form-label" for="recno">Rec No</label>
                             <input type="number" id="recno" class="form-control" name="recno"
                                 placeholder="Rec No" oninput="this.value = this.value.toUpperCase()" />
                             @error('recno')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div class="form-group mb-2">
                             <label class="form-label" for="user_id">User ID</label>
                             <input type="text" id="user_id" class="form-control" name="user_id"
@@ -214,14 +214,24 @@
                         </div>
 
                         <div class="form-group mb-2">
-                            <label class="form-label" for="ds_code">DS Code</label>
+                            {{-- <label class="form-label" for="ds_code">DS Code</label>
                             <input type="text" id="ds_code" class="form-control" name="ds_code"
                                 placeholder="DS Code" oninput="this.value = this.value.toUpperCase()" />
                             @error('ds_code')
                                 <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @enderror --}}
+                            {{-- <input type="text" id="ds_code" class="form-control" name="ds_code"
+                                placeholder="DS Code" /> --}}
+                            <label class="form-label" for="ds_code">DS Code</label>
+                            <select id="ds_code" class="select2 form-select form-select-lg" name="ds_code">
+                                <option selected disabled>Select DS Code</option>
+                                @foreach ($ds_codes as $code)
+                                    <option value="{{ $code }}">{{ $code }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group mb-2">
+                            <label class="form-label" for="certificate_tesda">Tesda Certificate</label>
                             <input type="text" id="certificate_tesda" class="form-control" name="certificate_tesda"
                                 placeholder="Tesda Certificate" />
                             @error('certificate_tesda')
@@ -300,9 +310,6 @@
 
                 </div>
 
-                {{-- @php
-            $configData = Helper::applClasses();
-          @endphp --}}
                 <div class="modal-body">
                     <img src="{{ asset('assets/img/hand_logo_dark.png') }}" alt="hand" height="auto"
                         width="100%" class="border border-primary">
@@ -358,7 +365,7 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="close_fp">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_fp">Cancel</button>
                     <button type="button" class="btn btn-success" id="save_fp">Save</button>
                 </div>
             </div>

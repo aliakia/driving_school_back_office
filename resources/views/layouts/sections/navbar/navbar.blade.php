@@ -76,7 +76,17 @@
                                 <span class="fw-semibold d-block">
                                     {{ $first_name }}
                                 </span>
-                                <small class="text-muted">Admin</small>
+                                @if ($user_type == 'tech_support')
+                                    <small class="badge bg-label-success">Tech Support</small>
+                                @elseif ($user_type == 'instructor')
+                                    <small class="badge bg-label-warning">Instructor</small>
+                                @elseif ($user_type == 'encoder')
+                                    <small class="badge bg-label-info">Encoder</small>
+                                @elseif ($user_typ == 'administrator')
+                                    <small class="badge bg-label-danger">Administrator</small>
+                                @else
+                                    User Type
+                                @endif
                             </div>
                         </div>
                     </a>

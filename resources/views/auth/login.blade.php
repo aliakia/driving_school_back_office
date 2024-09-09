@@ -9,8 +9,10 @@
 
 @section('vendor-style')
     <!-- Vendor -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
+
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+
 @endsection
 
 @section('page-style')
@@ -19,17 +21,51 @@
 @endsection
 
 @section('vendor-script')
-    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/toastr/toastr.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
 
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
+    <script>
+        const loginUrl = "{{ route('loginAccount') }}"
+    </script>
+    <script src="{{ asset('js/login.js') }}"></script>
 @endsection
 
 @section('content')
+    @if ($errors->any())
+        <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+            <div class="toast-header">
+
+                <span class="badge badge-center rounded-pill bg-label-danger me-2">
+                    <i class="ti ti-x ti-xs  text-danger"></i>
+                </span>
+                <div class="fw-semibold">Login Error</div>
+                {{-- <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> --}}
+            </div>
+            <div class="toast-body">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        </div>
+        {{-- <div class="bs-toast toast toast-ex animate__animated my-2 fade animate__fadeIn show    " role="alert"
+            aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
+            <div class="toast-header">
+                <i class="ti ti-bell ti-xs me-2 text-primary"></i>
+                <div class="me-auto fw-medium">Bootstrap</div>
+                <small class="text-muted">11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div> --}}
+    @endif
+
+
     <div class="authentication-wrapper authentication-cover authentication-bg">
         <div class="authentication-inner row">
             <!-- /Left Text -->
@@ -73,7 +109,8 @@
                     <h3 class="mb-1 fw-bold h1">Welcome!</h3>
                     <p class="mb-4">Please sign-in to your account</p>
 
-                    <form id="formLogin" class="mb-3" method="POST" action="{{ route('loginAccount') }}" id="login_form">
+                    <form id="formLogin" class="mb-3" method="POST" action="{{ route('loginAccount') }}"
+                        id="login_form">
                         @csrf
                         <div class="mb-3">
                             <label for="user_id" class="form-label">User Id</label>
@@ -137,23 +174,23 @@
         </div>
     </div>
     <div class="modal fade text-left" id="biometrics_modal" tabindex="-3" role="dialog" aria-labelledby="myModalLabel6"
-    aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel6">Biometrics Registration</h4>
-          {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
+        aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel6">Biometrics Registration</h4>
+                    {{-- <button type="button" class="close" data-dismiss="modal" id="close_cam" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button> --}}
-        </div>
-        <div class="modal-body" id="bio_modal_body">
+                </div>
+                <div class="modal-body" id="bio_modal_body">
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_bio">Cancel</button>
+                    <button type="button" class="btn btn-success" id="verify">Login</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_bio">Cancel</button>
-          <button type="button" class="btn btn-success" id="verify">Login</button>
-        </div>
-      </div>
     </div>
-  </div>
 @endsection

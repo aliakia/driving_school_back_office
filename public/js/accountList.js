@@ -1,8 +1,20 @@
 'use strict';
 
 $(document).ready(function () {
+  window.onload = function () {
+    localStorage.clear();
+  };
   const select2 = $('.select2'),
     basicPickr = $('.flatpickr-date');
+  1;
+  // $('#password').on('blur', function () {
+  //   this.value.toUpperCase();
+  // });
+
+  $('#newAccount').on('hidden.bs.modal', function () {
+    // Clear local storage when the modal is closed
+    localStorage.clear();
+  });
 
   if (basicPickr.length) {
     basicPickr.each(function () {
@@ -175,6 +187,16 @@ $(document).ready(function () {
 
   $('.fingers').on('click', function () {
     localStorage.setItem('fp', this.value);
+    // var frameSrc =
+    //   '<iframe src="../vuexy/biometrics/content.html" style="zoom:1.0" frameborder="0" height="400" width="100%" id="frame1"></iframe>';
+    // $('#bio_modal_body').html(frameSrc);
+    // $('#biometrics_modal').modal({
+    //   backdrop: 'static',
+    //   keyboard: false,
+    //   backdrop: false
+    // });
+    // // $('#biometrics_modal').modal({ show: true });
+    // $('#biometrics_modal').modal('show');
     var fp = localStorage.getItem('fp');
     $.ajax({
       type: 'GET',
@@ -209,6 +231,11 @@ $(document).ready(function () {
     });
   });
 
+  $('#close_fp').on('click', function () {
+    localStorage.clear();
+    $('#hand_modal').modal('hide');
+  });
+
   $('#save_bio').on('click', function () {
     $('#biometrics_modal').modal('hide');
     var frameSrc = '';
@@ -239,7 +266,6 @@ $(document).ready(function () {
 
     $('#hand_modal').modal('hide');
   });
-
   $('#select').on('click', function () {
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
@@ -304,17 +330,19 @@ $(document).ready(function () {
     e.preventDefault();
 
     const requiredFields = [
-      '#recno',
+      // '#recno',
       '#user_id',
       '#first_name',
       '#last_name',
       '#gender',
       '#user_type',
       '#is_active',
-      '#ds_code',
+      // '#ds_code',
       '#certificate_tesda',
       '#certificate_tesda_expiration',
-      '#user_expiration'
+      '#user_expiration',
+      '#password',
+      '#confirm_password'
     ];
 
     const allFilled = requiredFields.every(id => $(id).val().trim());

@@ -44,7 +44,7 @@ $(function () {
                 buttonsStyling: false
               }).then(function (result) {
                 if (result.isConfirmed) {
-                  form.submit(); // Submit the form if confirmed
+                  form.submit();
                   // console.log(deleteUrl);
 
                   Swal.fire({
