@@ -16,6 +16,7 @@
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/toastr/toastr.js') }}"></script>
 @endsection
 
 @section('page-script')
@@ -159,8 +160,8 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <label class="form-label" for="user_type">User Type</label>
-                                    <select id="user_type" name="user_type" class="form-control select2">
-                                        <option selected disabled>Select User Type</option>
+                                    <select id="user_type" name="user_type" class="form-control select2" disabled>
+
                                         <option value="administrator"
                                             {{ old('user_type', $selectedAcc->user_type) == 'administrator' ? 'selected' : '' }}>
                                             Administrator</option>
@@ -282,9 +283,9 @@
                                 </div>
                                 <div class="col-12 col-xl-6 mb-3">
 
-                                    <button type="button" class="btn btn-primary mb-1 w-100" id="open_cam">Open
+                                    <button type="button" class="btn btn-primary mb-1 w-100" id="select">Open
                                         Camera</button>
-                                    <input id="base_64" type="hidden" name="base_64" value="" />
+                                    <input id="pic_id1" type="hidden" name="pic_id1" value="" />
                                 </div>
                                 <div class="col-12 col-xl-6 mb-3">
                                     <button type="button" class="btn btn-primary mb-1 w-100" id="open_bio">Register
@@ -312,6 +313,22 @@
                             </div>
                         </div>
                         <div id="review-submit" class="content">
+                            <div class="row">
+
+                                <div class="col-12 col-md-3 my-1">
+                                    <div class="embed-responsive-1by1">
+
+                                        @if ($selectedAcc->pic_id1)
+                                            <img src="{{ $selectedAcc->pic_id1 }}" id="picture_1" class="bg-secondary"
+                                                alt="User Image" height="auto" width="50%" />
+                                        @else
+                                            <img src="{{ asset('assets/img/default.png') }}" id="picture_1"
+                                                class="bg-secondary" alt="default.png" height="auto" width="50%" />
+                                        @endif
+
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
@@ -319,11 +336,11 @@
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <ul class="list-unstyled">
-                                                <li class="row">
+                                                {{-- <li class="row">
                                                     <strong class="col-xl-5 col-6">Rec No:</strong>
                                                     <span class="col-xl-7 col-6"
                                                         id="preview-recno">{{ $selectedAcc->recno }}</span>
-                                                </li>
+                                                </li> --}}
                                                 <li class="row">
                                                     <strong class="col-xl-5 col-6">User ID:</strong>
                                                     <span class="col-xl-7 col-6"
@@ -345,7 +362,8 @@
                                                         id="preview-certificate_tesda">{{ $selectedAcc->certificate_tesda }}</span>
                                                 </li>
                                                 <li class="row">
-                                                    <strong class="col-xl-5 col-6">Tesda Certificate Expiration:</strong>
+                                                    <strong class="col-xl-5 col-6">Tesda Certificate
+                                                        Expiration:</strong>
                                                     <span class="col-xl-7 col-6"
                                                         id="preview-certificate_tesda_expiration">{{ $selectedAcc->certificate_tesda_expiration }}</span>
                                                 </li>
@@ -359,6 +377,7 @@
                                                     <span class="col-xl-7 col-6"
                                                         id="preview-is_active">{{ $selectedAcc->is_active }}</span>
                                                 </li>
+
 
                                             </ul>
                                         </div>
@@ -425,7 +444,8 @@
                             <div class="mb-3">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="checkBox" required />
-                                    <label class="form-check-label text-red" for="checkBox">Check the box if all info is
+                                    <label class="form-check-label text-red" for="checkBox">Check the box if all info
+                                        is
                                         correct.</label>
                                 </div>
                             </div>
@@ -544,11 +564,12 @@
                 <div class="modal-body">
                     <div class="embed-responsive embed-responsive-4by3">
                         <video width="100%" height="100%" autoplay="true" id="video"></video>
-                        <canvas id="canvas" style="width:100%; height:auto;" class="hidden"></canvas>
+
                     </div>
                     <button id="capture" type="button" class="btn btn-primary w-100 my-1">
-                        <i data-feather="camera" class="font-medium-4"></i> Capture
+                        <i class="ti ti-camera" class="font-medium-4"></i>
                     </button>
+                    <canvas id="canvas" style="width:100%; height:auto;`" class="hidden"></canvas>
                     <button id="saveImg" type="button" class="btn btn-primary w-100 mt-1 hidden" data-dismiss="modal"
                         aria-label="Close">Save</button>
                 </div>

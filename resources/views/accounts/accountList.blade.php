@@ -17,11 +17,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/toastr/toastr.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
-
-
-    <!-- Row Group CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css') }}">
-    <!-- Form Validation -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
 @endsection
 
@@ -32,12 +28,9 @@
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
-
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <!-- Flat Picker -->
     <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
-    <!-- Form Validation -->
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
@@ -56,6 +49,14 @@
 @endsection
 
 @section('content')
+    {{-- <select id="user_type_filter" class="form-select select2 w-3">
+        <option value="">All User Types</option>
+        <option value="instructor">Instructor</option>
+        <option value="encoder">Encoder</option>
+        <option value="administrator">Administrator</option>
+        <option value="tech_support">Tech Support</option>
+    </select> --}}
+
 
     @if ($errors->any())
         <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
@@ -103,8 +104,8 @@
                                 <img src="{{ asset('assets/img/default.png') }}" id="picture_1" class="bg-secondary"
                                     alt="default.png" height="auto" width="70%" />
                             </div>
-                            <button type="button" class="btn btn-primary mb-1 w-100" id="open_cam">Open Camera</button>
-                            <input id="base_64" type="hidden" name="base_64" value="" />
+                            <button type="button" class="btn btn-primary mb-1 w-100" id="select">Open Camera</button>
+                            <input id="pic_id1" type="hidden" name="pic_id1" value="" />
                             <button type="button" class="btn btn-primary mb-1 w-100" id="open_bio">Register
                                 fingerprint</button>
                             <input id="fp_idl5" type="hidden" name="fp_idl5" value="" />
@@ -401,13 +402,14 @@
                 <div class="modal-body">
                     <div class="embed-responsive embed-responsive-4by3">
                         <video width="100%" height="100%" autoplay="true" id="video"></video>
-                        <canvas id="canvas" style="width:100%; height:auto;" class="hidden"></canvas>
+
                     </div>
                     <button id="capture" type="button" class="btn btn-primary w-100 my-1">
-                        <i data-feather="camera" class="font-medium-4"></i> Capture
+                        <i class="ti ti-camera" class="font-medium-4"></i>
                     </button>
-                    <button id="saveImg" type="button" class="btn btn-primary w-100 mt-1 hidden" data-dismiss="modal"
-                        aria-label="Close">Save</button>
+                    <canvas id="canvas" style="width:100%; height:auto;" class="hidden"></canvas>
+                    <button id="saveImg" type="button" class="btn btn-primary w-100 mt-1 hidden"
+                        data-bs-dismiss="modal" aria-label="Close">Save</button>
                 </div>
             </div>
         </div>

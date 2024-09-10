@@ -146,7 +146,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="dti_accreditation_no">DTI ACCREDITATION
                                             NUMBER</label>
-                                        <input type="number" id="dti_accreditation_no" name="dti_accreditation_no"
+                                        <input type="text" id="dti_accreditation_no" name="dti_accreditation_no"
                                             class="form-control @error('dti_accreditation_no') is-invalid @enderror auto-caps"
                                             placeholder="DTI ACCREDITATION NUMBER"
                                             value="{{ old('dti_accreditation_no', $selectedDs->dti_accreditation_no) }}">
@@ -159,7 +159,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="lto_accreditation_no">LTO ACCREDITATION
                                             NUMBER</label>
-                                        <input type="number" id="lto_accreditation_no" name="lto_accreditation_no"
+                                        <input type="text" id="lto_accreditation_no" name="lto_accreditation_no"
                                             class="form-control @error('lto_accreditation_no') is-invalid @enderror auto-caps"
                                             placeholder="LTO ACCREDITATION NUMBER"
                                             value="{{ old('lto_accreditation_no', $selectedDs->lto_accreditation_no) }}">

@@ -12,7 +12,6 @@ $(document).ready(function () {
   // });
 
   $('#newAccount').on('hidden.bs.modal', function () {
-    // Clear local storage when the modal is closed
     localStorage.clear();
   });
 
@@ -124,7 +123,6 @@ $(document).ready(function () {
           text: '<i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Create New Account</span>',
           className: 'create-new btn btn-primary',
           action: function (e, dt, node, config) {
-            // Trigger the modal using Bootstrap's modal method
             $('#newAccount').modal('show');
           }
         }
@@ -134,9 +132,9 @@ $(document).ready(function () {
   }
 
   $(document).on('click', '.delete-btn', function (e) {
-    e.preventDefault(); // Prevent the form from submitting immediately
+    e.preventDefault();
 
-    var form = $(this).closest('form'); // Get the form
+    var form = $(this).closest('form');
 
     Swal.fire({
       title: 'Are you sure?',
@@ -151,7 +149,7 @@ $(document).ready(function () {
       buttonsStyling: false
     }).then(function (result) {
       if (result.isConfirmed) {
-        form.submit(); // Submit the form if confirmed
+        form.submit();
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
@@ -180,9 +178,6 @@ $(document).ready(function () {
       backdrop: false
     });
     $('#hand_modal').modal('show');
-  });
-  $('#open_cam').on('click', function () {
-    $('#camera').modal('show');
   });
 
   $('.fingers').on('click', function () {
@@ -256,9 +251,9 @@ $(document).ready(function () {
       fp_idr5: localStorage.getItem('fp_idr5')
     };
 
-    $.each(fingerprintData, function (key, value) {
+    $.each(fingerprintData, function (id, value) {
       if (value !== null && value !== '') {
-        $('#' + key).val(value);
+        $('#' + id).val(value);
       }
     });
 
@@ -282,30 +277,34 @@ $(document).ready(function () {
       keyboard: false,
       backdrop: false
     });
-    Webcam.set({
-      width: 640,
-      height: 480,
-      align: 'center',
-      image_format: 'jpeg',
-      jpeg_quality: 100
-    });
-    Webcam.attach('#video');
+    $('#camera').modal('show');
+    // Webcam.set({
+    //     width: 640,
+    //     height: 480,
+    //     align:'center',
+    //     image_format: 'jpeg',
+    //     jpeg_quality: 100
+    // });
+    // Webcam.attach('#video');
   });
+  $('#close_cam').on('click', function () {});
 
   $('#capture').on('click', function () {
     capture();
   });
   $('#saveImg').on('click', function () {
+    console.log('hello');
+
     save();
   });
 
   function capture() {
-    var canvas = $('#canvas');
-    Webcam.snap(function (data_uri) {
-      canvas.attr('src', data_uri);
-      $('#canvas').removeClass('hidden');
-      $('#saveImg').removeClass('hidden');
-    });
+    // var canvas = $('#canvas');
+    // Webcam.snap( function(data_uri) {
+    //     canvas.attr('src', data_uri);
+    //     $('#canvas').removeClass('hidden');
+    //     $('#saveImg').removeClass('hidden');
+    // });
     var canvas = document.getElementById('canvas');
     var video = document.getElementById('video');
     canvas.width = 640;
@@ -315,13 +314,13 @@ $(document).ready(function () {
     $('#saveImg').removeClass('hidden');
   }
   function save() {
-    var base_64 = $('#canvas').attr('src');
+    // var base_64 = $('#canvas').attr('src');
     // $('#picture_1').attr('src', base_64);
     // $('#base_64').val(base_64);
     // $('#canvas').addClass('hidden');
     // $('#saveImg').addClass('hidden');
     document.getElementById('picture_1').src = canvas.toDataURL();
-    $('#base_64').val(canvas.toDataURL());
+    $('#pic_id1').val(canvas.toDataURL());
     $('#canvas').addClass('hidden');
     $('#saveImg').addClass('hidden');
   }

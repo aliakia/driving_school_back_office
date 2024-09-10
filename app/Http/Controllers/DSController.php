@@ -17,9 +17,7 @@ class DSController extends Controller
     }
     
     public function index() {
-        $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
-        $user_type = $loggedUser->user_type;
+
 
 
         $all_ds = DB::table('tb_ds')
@@ -31,19 +29,13 @@ class DSController extends Controller
 
         return view('ds.viewList', [
             'all_ds' => $all_ds,
-            'first_name' => $first_name,
-            'user_type' => $user_type,
+        
         ]);
     }
 
     public function viewCreateForm() {
-        $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
-        $user_type = $loggedUser->user_type;
-        return view('ds.createNewDSForm', [
-            'first_name' => $first_name,
-            'user_type' => $user_type,
-        ]);
+
+        return view('ds.createNewDSForm');
     }
 
     public function createNewDs(Request $request) {
@@ -117,16 +109,21 @@ class DSController extends Controller
         $cAdress = $request['town_city'] . ', ' . $request['region'] . ', ' . $request['province'];
 
         //Handle file uploads and store file paths
-        $filePaths = [];
-        foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $file) {
-            if ($request->hasFile($file)) {
-                $filePaths[$file] = $request->file($file)->store('uploads', 'public');
+        $binaryDatas = [];
+
+        foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $image) {
+            if ($request->hasFile($image)) {
+                $binaryDatas[$image] = file_get_contents($request->file($image)->getRealPath());
             } else {
-                $filePaths[$file] = null;
+                $binaryDatas[$image] = null;
             }
         }
+        
+        // $base64String = $request->base_64;
+        // $binaryData = base64_decode($base64String);
+        // $validatedData['base_64'] = $binaryData;
 
-        $data = array_merge($validatedDsData, $filePaths);
+        $data = array_merge($validatedDsData, $binaryDatas);
     
         // dd($data);
 
@@ -148,9 +145,7 @@ class DSController extends Controller
     }
 
     public function viewEditForm($ds_code) {
-        $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
-        $user_type = $loggedUser->user_type;
+
 
         // $ds_code = 'DS_001';
         $selectedDs = DB::table('tb_ds')->where('ds_code', $ds_code)->first();
@@ -160,8 +155,7 @@ class DSController extends Controller
         return view('ds.updateDSForm', [
             'selectedDs' => $selectedDs,
             'dsSetting' => $dsSetting,
-            'first_name' => $first_name,
-            'user_type' => $user_type,
+            
         ]);
 
         //return dd($selectedDs);
@@ -234,15 +228,11 @@ class DSController extends Controller
             "number_prescribed_days_per_instruction" => 'required',
         ]);
     
-        //Handle file uploads and store file paths
-        
-
         $imageFields = ['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'];
             foreach ($imageFields as $imageField) {
                 if ($request->filled($imageField)) {
-                    // Decode base64 to binary
-                    $binaryData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->$imageField));
-                    $validatedData[$imageField] = $binaryData; // Store binary data in database
+                    $binaryData = base64_decode(preg_replace('#^data:image/\w.;base64,#i', '', $request->$imageField));
+                    $validatedData[$imageField] = $binaryData; 
                 }
             }
     

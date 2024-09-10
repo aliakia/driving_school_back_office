@@ -73,9 +73,6 @@
     });
     $('#hand_modal').modal('show');
   });
-  $('#open_cam').on('click', function () {
-    $('#camera').modal('show');
-  });
 
   $('.fingers').on('click', function () {
     localStorage.setItem('fp', this.value);
@@ -148,9 +145,9 @@
       fp_idr5: localStorage.getItem('fp_idr5')
     };
 
-    $.each(fingerprintData, function (key, value) {
+    $.each(fingerprintData, function (id, value) {
       if (value !== null && value !== '') {
-        $('#' + key).val(value);
+        $('#' + id).val(value);
       }
     });
 
@@ -175,30 +172,33 @@
       keyboard: false,
       backdrop: false
     });
-    Webcam.set({
-      width: 640,
-      height: 480,
-      align: 'center',
-      image_format: 'jpeg',
-      jpeg_quality: 100
-    });
-    Webcam.attach('#video');
+    $('#camera').modal('show');
+    // Webcam.set({
+    //     width: 640,
+    //     height: 480,
+    //     align:'center',
+    //     image_format: 'jpeg',
+    //     jpeg_quality: 100
+    // });
+    // Webcam.attach('#video');
   });
+  $('#close_cam').on('click', function () {});
 
   $('#capture').on('click', function () {
     capture();
   });
   $('#saveImg').on('click', function () {
     save();
+    $('#camera').modal('hide');
   });
 
   function capture() {
-    var canvas = $('#canvas');
-    Webcam.snap(function (data_uri) {
-      canvas.attr('src', data_uri);
-      $('#canvas').removeClass('hidden');
-      $('#saveImg').removeClass('hidden');
-    });
+    // var canvas = $('#canvas');
+    // Webcam.snap( function(data_uri) {
+    //     canvas.attr('src', data_uri);
+    //     $('#canvas').removeClass('hidden');
+    //     $('#saveImg').removeClass('hidden');
+    // });
     var canvas = document.getElementById('canvas');
     var video = document.getElementById('video');
     canvas.width = 640;
@@ -208,16 +208,17 @@
     $('#saveImg').removeClass('hidden');
   }
   function save() {
-    var base_64 = $('#canvas').attr('src');
+    // var base_64 = $('#canvas').attr('src');
     // $('#picture_1').attr('src', base_64);
     // $('#base_64').val(base_64);
     // $('#canvas').addClass('hidden');
     // $('#saveImg').addClass('hidden');
     document.getElementById('picture_1').src = canvas.toDataURL();
-    $('#base_64').val(canvas.toDataURL());
+    $('#pic_id1').val(canvas.toDataURL());
     $('#canvas').addClass('hidden');
     $('#saveImg').addClass('hidden');
   }
+
   const select2 = $('.select2'),
     basicPickr = $('.flatpickr-date');
 

@@ -18,10 +18,6 @@ class AccountController extends Controller
     }
 
     public function index() {
-        $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
-        $user_type = $loggedUser->user_type;
-
         $ds_codes = DB::table('tb_ds')->pluck('ds_code');
 
         // dd($ds_codes);
@@ -34,15 +30,15 @@ class AccountController extends Controller
                     'last_name',
                     'ds_code',
                     'is_active', 
-                    'user_type'
+                    'user_type',
                     )->get();
 
 
+
         return view('accounts.accountList', [
-            'first_name' => $first_name,
             'accounts' => $accounts,
             'ds_codes' => $ds_codes,
-            'user_type' => $user_type,
+          
         ]);
     }
 
@@ -50,9 +46,10 @@ class AccountController extends Controller
     public function createAccount(Request $request) {
         $validatedData = $request->validate([
             // 'recno' => 'required',
+            // 'pic_id1' => 'required',
             'user_id' => 'required',
             'employee_id' => 'required',
-            'password' => 'required|min:5', // Ensure minimum length for the password
+            'password' => 'required|min:5',
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
@@ -86,8 +83,6 @@ class AccountController extends Controller
             'fp_id_img_r1' => 'nullable',
         ]);
 
-        
-
         $validator = FacadesValidator::make($request->all(), [
             'confirm_password' => 'required|same:password'
         ]);
@@ -101,24 +96,6 @@ class AccountController extends Controller
         $_enc_password = hash("sha512", $_password);
         $validatedData['password'] = strtoupper($_enc_password);
 
-        // Process image fields
-        // $imageFields = ['pic_id1', 'pic_id2', 'pic_id3', 'pic_id4', 'pic_id5'];
-        // foreach ($imageFields as $imageField) {
-        //     if ($request->filled($imageField)) {
-        //         $binaryData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->$imageField));
-        //         $validatedData[$imageField] = $binaryData; 
-        //     }
-        // }
-
-        // $fingerprintFields = ['fp_idl1', 'fp_idr1', 'fp_idl2', 'fp_idr2', 'fp_idl3', 'fp_idr3', 'fp_idl4', 'fp_idr4', 'fp_idl5', 'fp_idr5'];
-        // foreach ($fingerprintFields as $fingerprintField) {
-        //     if ($request->filled($fingerprintField)) {
-        //         $binaryFingerprintData = base64_decode($request->$fingerprintField);
-        //         $validatedData[$fingerprintField] = $binaryFingerprintData;
-        //     }
-        // }
-
-        // dd($request->all());
         try {
             DB::beginTransaction();
             DB::table('tb_users')->insert($validatedData);
@@ -133,17 +110,30 @@ class AccountController extends Controller
     
     
     public function viewEditForm($user_id){
-        $loggedUser = session('logged_in');
-        $first_name = $loggedUser->first_name;
-        $user_type = $loggedUser->user_type;
 
         $ds_codes = DB::table('tb_ds')->pluck('ds_code');
-        $selectedAcc = DB::table('tb_users')->where('user_id', $user_id)->first();
+        $selectedAcc = DB::table('tb_users')
+            ->select(  
+                'user_id',
+                'employee_id',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'gender',
+                'user_type',
+                'ds_code',
+                'certificate_tesda',
+                'certificate_tesda_expiration',
+                'is_active',
+                'description',
+                'user_expiration',
+                'password',
+                DB::raw("encode(pic_id1, 'escape') as pic_id1"),
+            )
+            ->where('user_id', $user_id)->first();
         return view('accounts.editAccountForm', [
             'selectedAcc' => $selectedAcc,
-            'first_name' => $first_name,
             'ds_codes' => $ds_codes,
-            'user_type' => $user_type,
         ]);
     }
 
@@ -151,6 +141,7 @@ class AccountController extends Controller
 
         $validatedData = $request->validate([
             // 'recno' => 'required',
+            // 'pic_id1' => 'required',
             'user_id' => 'required',
             'employee_id' => 'required',
             'first_name' => 'required',
@@ -208,7 +199,8 @@ class AccountController extends Controller
     
         DB::transaction(function () use ($user_id, $validatedData, $request) {
             try {
-                $user = DB::table('tb_users')->where('user_id', $user_id)->first();
+                $user = DB::table('tb_users')
+                ->where('user_id', $user_id)->first();
         
                 if ($request->filled('old_password')) {
                     $old_password = $request->old_password;
@@ -235,6 +227,9 @@ class AccountController extends Controller
                     if (!$request->filled($field)) {
                         unset($validatedData[$field]);
                     }
+                }
+                if (!$request->filled('pic_id1')) {
+                    unset($validatedData['pic_id1']);
                 }
         
                 DB::table('tb_users')->where('user_id', $user_id)->update($validatedData);

@@ -47,42 +47,55 @@
         <!-- /Search -->
     @endif
     <ul class="navbar-nav flex-row align-items-center ms-auto">
-        {{-- <li class="nav-item text-end">
+        <li class="nav-item text-end me-2">
             <small class="fw-semibold d-block">
-                {{ $first_name }}
+                {{ Session('logged_in')->first_name }} {{ Session('logged_in')->last_name }}
             </small>
-            <small class="text-muted">Admin</small>
-        </li> --}}
+            @if (Session('logged_in')->user_type == 'tech_support')
+                <small class="badge bg-label-success">Tech Support</small>
+            @elseif (Session('logged_in')->user_type == 'instructor')
+                <small class="badge bg-label-warning">Instructor</small>
+            @elseif (Session('logged_in')->user_type == 'encoder')
+                <small class="badge bg-label-info">Encoder</small>
+            @elseif (Session('logged_in')->user_type == 'administrator')
+                <small class="badge bg-label-danger">Administrator</small>
+            @else
+                User Type
+            @endif
+        </li>
 
         <!-- User -->
-        <li class="nav-item navbar-dropdown dropdown-user dropdown">
+        <li class="nav-item navbar-dropdown dropdown-user dropdown ml-3">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                    <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/harkonnen_logo.png') }}"
-                        alt class="h-auto rounded-circle">
+                    <img src="{{ Session('logged_in')->pic_id1 ?? asset('assets/img/default.png') }}" alt
+                        class="rounded-circle me-2">
+                    {{-- @dd($loggedUser->pic_id1) --}}
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li>
+                {{-- <li>
                     <a class="dropdown-item">
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <img src="{{ asset('assets/img/harkonnen_logo.png') }}" alt
-                                        class="h-auto rounded-circle">
+                                    <img src="{{ Session('logged_in')->pic_id1 ?? asset('assets/img/default.png') }}"
+                                        alt class="rounded-circle">
+
+
                                 </div>
                             </div>
                             <div class="flex-grow-1">
                                 <span class="fw-semibold d-block">
-                                    {{ $first_name }}
+                                    {{ Session('logged_in')->first_name }} {{ Session('logged_in')->last_name }}
                                 </span>
-                                @if ($user_type == 'tech_support')
+                                @if (Session('logged_in')->user_type == 'tech_support')
                                     <small class="badge bg-label-success">Tech Support</small>
-                                @elseif ($user_type == 'instructor')
+                                @elseif (Session('logged_in')->user_type == 'instructor')
                                     <small class="badge bg-label-warning">Instructor</small>
-                                @elseif ($user_type == 'encoder')
+                                @elseif (Session('logged_in')->user_type == 'encoder')
                                     <small class="badge bg-label-info">Encoder</small>
-                                @elseif ($user_typ == 'administrator')
+                                @elseif (Session('logged_in')->user_type == 'administrator')
                                     <small class="badge bg-label-danger">Administrator</small>
                                 @else
                                     User Type
@@ -90,7 +103,7 @@
                             </div>
                         </div>
                     </a>
-                </li>
+                </li> --}}
 
                 <li>
 
