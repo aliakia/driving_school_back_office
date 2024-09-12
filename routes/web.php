@@ -3,10 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DSController;
-use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
-
-
 
 
 Route::middleware(['auth.check'])->group(function(){
@@ -34,12 +31,10 @@ Route::middleware(['auth.check'])->group(function(){
 });
 
 
-//Auth Routes
-Route::prefix('auth')->group(function() {
-    Route::middleware(['logged.check'])->group(function() {
-        Route::get('/login', [AuthController::class, 'index'])->name('login');
-        Route::post('/login', [AuthController::class, 'login'])->name('loginAccount');
-    
-    });
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logoutAccount');
+
+Route::middleware(['logged.check'])->group(function() {
+    Route::get('/', [AuthController::class, 'index'])->name('login');
+    Route::get('/data', [AuthController::class, 'fetchData'])->name('fetchData');
+    Route::post('/login', [AuthController::class, 'login'])->name('loginAccount');
 });
+Route::post('/logout', [AuthController::class, 'logout'])->name('logoutAccount');

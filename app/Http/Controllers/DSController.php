@@ -17,9 +17,6 @@ class DSController extends Controller
     }
     
     public function index() {
-
-
-
         $all_ds = DB::table('tb_ds')
                     ->select(
                     'ds_code',
@@ -34,7 +31,6 @@ class DSController extends Controller
     }
 
     public function viewCreateForm() {
-
         return view('ds.createNewDSForm');
     }
 
@@ -108,23 +104,28 @@ class DSController extends Controller
         //Address Handler
         $cAdress = $request['town_city'] . ', ' . $request['region'] . ', ' . $request['province'];
 
-        //Handle file uploads and store file paths
         $binaryDatas = [];
 
+        $binaryDatas = [];
+        $base_64 = [];
+        
         foreach (['logo_big', 'logo_small', 'ds_pic1', 'ds_pic2', 'ds_pic3', 'ds_pic4', 'ds_pic5'] as $image) {
             if ($request->hasFile($image)) {
-                $binaryDatas[$image] = file_get_contents($request->file($image)->getRealPath());
+                $file = $request->file($image); // Get the uploaded file object
+                $binaryDatas[$image] = file_get_contents($file->getRealPath());
+                $base_64[$image] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($binaryDatas[$image]);
             } else {
                 $binaryDatas[$image] = null;
             }
         }
         
+
         // $base64String = $request->base_64;
         // $binaryData = base64_decode($base64String);
         // $validatedData['base_64'] = $binaryData;
 
-        $data = array_merge($validatedDsData, $binaryDatas);
-    
+        $data = array_merge($validatedDsData, $base_64);
+        
         // dd($data);
 
         try {
@@ -136,6 +137,7 @@ class DSController extends Controller
             return redirect()->route('drivingSchool')->with('success', 'Driving School created successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
+            dd($th);
             return redirect()->route('viewCreateForm')->with('error', 'There was an error creating driving school.');
         }
 
@@ -172,8 +174,8 @@ class DSController extends Controller
             'province' => 'required|string|max:255',
             'region' => 'required|string|max:255',
             'town_city' => 'required|string|max:255',
-            'dti_accreditation_no' => 'required|integer',
-            'lto_accreditation_no' => 'required|integer',
+            'dti_accreditation_no' => 'required',
+            'lto_accreditation_no' => 'required',
             'date_it_started' => 'required|date',
             'date_it_accredited' => 'required|date',
             'date_it_renewal' => 'required|date',
@@ -323,7 +325,7 @@ class DSController extends Controller
                         DB::rollBack();
 
         
-                        return redirect()->route('viewEditForm')->with('error', 'There was an error creating driving school.');
+                        return redirect()->back()->with('error', 'There was an error creating driving school.');
                     }
                     
                 });

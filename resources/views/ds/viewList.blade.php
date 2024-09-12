@@ -30,7 +30,7 @@
 @section('page-script')
     <script src="{{ asset('js/viewList.js') }}"></script>
     <script>
-        const dsUrl = 'http://localhost/vuexy/driving-school/data';
+        const dsUrl = "{{ route('dsDataUrl') }}";
         const createFormUrl = "{{ route('viewCreateForm') }}";
         const editFormBaseUrl = "{{ route('viewEditForm', ['ds_code' => '__REPLACE__']) }}";
         const deleteFormBaseUrl = "{{ route('deleteDs', ['ds_code' => '__REPLACE__']) }}";

@@ -19,7 +19,7 @@ $(document).ready(function () {
     basicPickr.each(function () {
       $(this).flatpickr({
         monthSelectorType: 'static',
-        dateFormat: 'Y-m-d'
+        dateFormat: 'M-d-y'
       });
     });
   }
@@ -60,6 +60,14 @@ $(document).ready(function () {
             return data === '1'
               ? '<span class="badge bg-label-success me-1">Active</span>'
               : '<span class="badge bg-label-danger me-1">Inactive</span>';
+          }
+        },
+        {
+          targets: 2,
+          render: function (data) {
+            // console.log(dsMapping);
+            return dsMapping[data] || data;
+            // console.log(data);
           }
         },
         {

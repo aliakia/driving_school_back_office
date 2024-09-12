@@ -13,6 +13,9 @@
     }
 
     let displayValue;
+    function getDisplayValue(ds_code) {
+      return dsMapping[ds_code] || ds_code; // Returns the name if exists, otherwise returns the code
+    }
 
     switch (id) {
       case 'is_active':
@@ -36,6 +39,9 @@
         }
 
         break;
+      case 'ds_code':
+        displayValue = getDisplayValue(value);
+        break;
       default:
         displayValue = value;
         break;
@@ -43,7 +49,7 @@
 
     previewElement.textContent = displayValue;
   }
-
+  console.log(dsMapping);
   const inputs = document.querySelectorAll('#wizard-validation-form input');
   const selects = document.querySelectorAll('#wizard-validation-form select');
   const textarea = document.querySelectorAll('#wizard-validation-form textarea');

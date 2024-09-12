@@ -21,7 +21,8 @@
 
 @section('page-script')
     <script>
-        var homeUrl = "{{ route('accounts') }}"
+        const homeUrl = "{{ route('accounts') }}"
+        const dsMapping = @json($ds_mapping);
     </script>
     {{-- <script src="{{ asset('assets/js/form-wizard-numbered.js') }}"></script> --}}
     <script src="{{ asset('js/accForm.js') }}"></script>
@@ -115,11 +116,15 @@
                                         oninput="this.value = this.value.toUpperCase()" />
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
-                                    <label class="form-label" for="ds_code">DS Code</label>
+                                    <label class="form-label" for="ds_code">DS Name</label>
                                     <select id="ds_code" class="select2 form-select form-select-lg" name="ds_code">
-                                        <option selected>{{ old('ds_code', $selectedAcc->ds_code) }}</option>
-                                        @foreach ($ds_codes as $code)
-                                            <option value="{{ $code }}">{{ $code }}</option>
+                                        <option value="{{ old($selectedAcc->ds_code) }}" selected>{{ $ds_name }}
+                                        </option>
+                                        @foreach ($ds_codes as $index => $code)
+                                            <option value="{{ $code }}"
+                                                {{ old('ds_code', $selectedAcc->ds_code) == $code ? 'selected' : '' }}>
+                                                {{ $ds_name[$index] }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -149,7 +154,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="user_expiration">User Expiration</label>
                                         <input type="date" name="user_expiration" class="flatpickr-date form-control "
-                                            placeholder="YYYY-MM-DD" id="user_expiration"
+                                            placeholder="MM-DD-YYY" id="user_expiration"
                                             value="{{ old('user_expiration', $selectedAcc->user_expiration) }}">
 
                                         @error('user_expiration')
@@ -160,7 +165,8 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                                     <label class="form-label" for="user_type">User Type</label>
-                                    <select id="user_type" name="user_type" class="form-control select2" disabled>
+                                    <select id="user_type" name="user_type" class="form-control select2">
+                                        {{-- <option selected disabled>Select User Type</option> --}}
 
                                         <option value="administrator"
                                             {{ old('user_type', $selectedAcc->user_type) == 'administrator' ? 'selected' : '' }}>
@@ -182,7 +188,7 @@
 
                                         <select id="is_active" class="select2 form-select form-select-lg"
                                             name="is_active">
-                                            <option selected disabled>Select Activity Status</option>
+                                            {{-- <option selected disabled>Select Activity Status</option> --}}
                                             <option value="0"
                                                 {{ old('is_active', $selectedAcc->is_active) == '0' ? 'selected' : '' }}>
                                                 Inactive
@@ -277,7 +283,7 @@
                                 </div>
 
 
-                                <div class="col-12 col-xl-6 mb-3">
+                                <div class="col-12 col-xl-9 mb-3">
                                     <label class="form-label" for="description">Description</label>
                                     <textarea name="description" placeholder="Description" id="description" class="form-control">{{ old('description', $selectedAcc->description) }}</textarea>
                                 </div>
@@ -316,6 +322,7 @@
                             <div class="row">
 
                                 <div class="col-12 col-md-3 my-1">
+                                    <p class="fw-semibold mb-2">Image</p>
                                     <div class="embed-responsive-1by1">
 
                                         @if ($selectedAcc->pic_id1)
@@ -329,7 +336,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <hr>
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                                     <p class="fw-semibold mb-2">Account Info</p>
@@ -351,11 +358,38 @@
                                                     <span class="col-xl-7 col-6"
                                                         id="preview-employee_id">{{ $selectedAcc->employee_id }}</span>
                                                 </li>
-                                                <li class="row">
+                                                {{-- @php
+                                                    $dsMapping = $ds_mapping;
+                                                    $dsCode = $selectedAcc->ds_code;
+                                                    $dsName = isset($dsMapping[$dsCode])
+                                                        ? $dsMapping[$dsCode]
+                                                        : 'Unknown';
+                                                @endphp --}}
+
+                                                {{-- <li class="row">
+                                                    <strong class="col-xl-5 col-6">DS Code:</strong>
+                                                    <span class="col-xl-7 col-6" id="preview-ds_code">{{ $dsCode }}</span>
+                                                </li> --}}
+                                                @php
+                                                    // Extract the DS Code from the selected account
+                                                    $dsCode = $selectedAcc->ds_code;
+
+                                                    // Lookup the DS Name using the DS Code
+                                                    $dsName = $ds_mapping[$dsCode] ?? 'Unknown'; // Default to 'Unknown' if the code is not found
+                                                @endphp
+
+                                                {{-- <li class="row">
                                                     <strong class="col-xl-5 col-6">DS Code:</strong>
                                                     <span class="col-xl-7 col-6"
-                                                        id="preview-ds_code">{{ $selectedAcc->ds_code }}</span>
+                                                        id="preview-ds_code">{{ $dsCode }}</span>
+                                                </li> --}}
+                                                <li class="row">
+                                                    <strong class="col-xl-5 col-6">DS Name:</strong>
+                                                    <span class="col-xl-7 col-6" id="preview-ds_code">
+                                                        {{ $ds_mapping[$selectedAcc->ds_code] ?? $selectedAcc->ds_code }}
+                                                    </span>
                                                 </li>
+
                                                 <li class="row">
                                                     <strong class="col-xl-5 col-6">Tesda Certificate:</strong>
                                                     <span class="col-xl-7 col-6"

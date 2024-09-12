@@ -68,9 +68,12 @@
         <li class="nav-item navbar-dropdown dropdown-user dropdown ml-3">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                    <img src="{{ Session('logged_in')->pic_id1 ?? asset('assets/img/default.png') }}" alt
-                        class="rounded-circle me-2">
-                    {{-- @dd($loggedUser->pic_id1) --}}
+                    <img src="{{ Session('logged_in')->pic_id1 }}" alt="avatar" class="rounded-circle me-2">
+                    {{-- @if (Session('logged_in')->pic_id1 == '')
+                        <img class="rounded-circle me-2" src="{{ asset('images/default.png') }}" alt="avatar">
+                    @else
+                        <img class="rounded-circle me-2" src="{{ Session('logged_in')->pic_id1 }}" alt="avatar">
+                    @endif --}}
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">

@@ -19,6 +19,9 @@ class AccountController extends Controller
 
     public function index() {
         $ds_codes = DB::table('tb_ds')->pluck('ds_code');
+        $ds_name = DB::table('tb_ds')->pluck('ds_name');
+
+        $ds_mapping = DB::table('tb_ds')->pluck('ds_name', 'ds_code')->toArray();
 
         // dd($ds_codes);
         // $accounts = DB::table('tb_users')
@@ -38,6 +41,8 @@ class AccountController extends Controller
         return view('accounts.accountList', [
             'accounts' => $accounts,
             'ds_codes' => $ds_codes,
+            'ds_name' => $ds_name,
+            'ds_mapping' => $ds_mapping
           
         ]);
     }
@@ -96,6 +101,7 @@ class AccountController extends Controller
         $_enc_password = hash("sha512", $_password);
         $validatedData['password'] = strtoupper($_enc_password);
 
+        // dd($validatedData);
         try {
             DB::beginTransaction();
             DB::table('tb_users')->insert($validatedData);
@@ -103,15 +109,16 @@ class AccountController extends Controller
             return redirect()->route('accounts')->with('success', 'Account created successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            // dd($th);
+            dd($th);
             return redirect()->route('accounts')->with('error', 'There was an error creating account.');
         }
     }
     
     
     public function viewEditForm($user_id){
-
+        $ds_mapping = DB::table('tb_ds')->pluck('ds_name', 'ds_code')->toArray();
         $ds_codes = DB::table('tb_ds')->pluck('ds_code');
+        $ds_name = DB::table('tb_ds')->pluck('ds_name');
         $selectedAcc = DB::table('tb_users')
             ->select(  
                 'user_id',
@@ -134,6 +141,8 @@ class AccountController extends Controller
         return view('accounts.editAccountForm', [
             'selectedAcc' => $selectedAcc,
             'ds_codes' => $ds_codes,
+            'ds_name' => $ds_name,
+            'ds_mapping' => $ds_mapping
         ]);
     }
 

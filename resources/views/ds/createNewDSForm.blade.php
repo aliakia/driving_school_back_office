@@ -24,9 +24,19 @@
 
 @section('content')
     @if ($errors->any())
-        @foreach ($errors->all() as $error)
-            <div>{{ $error }}</div>
-        @endforeach
+        <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+            <div class="toast-header">
+                <i class="ti ti-bell ti-xs me-2 text-danger"></i>
+                <div class="me-auto fw-semibold">Account not created!</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        </div>
     @endif
 
     <div class="row">
@@ -646,7 +656,7 @@
                                     <div class="form-group">
 
                                         <label class="form-label" for="logo_big">LOGO BIG</label>
-                                        <input type="file" name="logo_big" id="logo_big" class="form-control" />
+                                        <input type="file" name="logo_big" id="logo_big" class="form-control" value=""/>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-6 col-xl-6 mb-3">
@@ -1191,42 +1201,42 @@
     <script>
         const homeUrl = "{{ route('drivingSchool') }}"
 
-        function uploadFile() {
-            const form = document.getElementById('uploadForm');
-            const formData = new FormData(form);
+        // function uploadFile() {
+        //     const form = document.getElementById('uploadForm');
+        //     const formData = new FormData(form);
 
-            fetch('{{ route('submitDS') }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            throw new Error(text);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Form submitted successfully');
-                        window.location.href = homeUrl;
-                    } else {
-                        alert('Submission failed: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred: ' + error.message);
-                });
+        //     fetch('{{ route('submitDS') }}', {
+        //             method: 'POST',
+        //             body: formData,
+        //             headers: {
+        //                 'Accept': 'application/json',
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        //             }
+        //         })
+        //         .then(response => {
+        //             if (!response.ok) {
+        //                 return response.text().then(text => {
+        //                     throw new Error(text);
+        //                 });
+        //             }
+        //             return response.json();
+        //         })
+        //         .then(data => {
+        //             if (data.success) {
+        //                 alert('Form submitted successfully');
+        //                 window.location.href = homeUrl;
+        //             } else {
+        //                 alert('Submission failed: ' + data.message);
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //             alert('An error occurred: ' + error.message);
+        //         });
 
-            console.log(response.json());
+        //     console.log(response.json());
 
-        }
+        // }
     </script>
 
     <script src="{{ asset('js/form.js') }}"></script>

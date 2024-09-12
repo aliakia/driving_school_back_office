@@ -9,7 +9,8 @@
 @php
     /* Display elements */
     $contentNavbar = $contentNavbar ?? true;
-    $containerNav = $containerNav ?? 'container-xxl';
+    // $containerNav = $containerNav ?? 'container-xxl';
+    $containerNav = $containerNav ?? 'container-fluid';
     $isNavbar = $isNavbar ?? true;
     $isMenu = $isMenu ?? true;
     $isFlex = $isFlex ?? false;
@@ -25,7 +26,8 @@
     $menuCollapsed = isset($configData['menuCollapsed']) ? $configData['menuCollapsed'] : '';
 
     /* Content classes */
-    $container = $container ?? 'container-xxl';
+    // $container = $container ?? 'container-xxl';
+    $container = $container ?? 'container-fluid';
 
 @endphp
 

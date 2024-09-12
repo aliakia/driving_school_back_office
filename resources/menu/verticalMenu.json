@@ -3,13 +3,13 @@
     {
       "url": "/driving-school",
       "name": "Driving School",
-      "icon": "menu-icon tf-icons ti ti-text-wrap-disabled",
+      "icon": "menu-icon tf-icons ti ti-car",
       "slug": "app-email"
     },
     {
       "url": "/accounts",
       "name": "Accounts",
-      "icon": "menu-icon tf-icons ti ti-text-wrap-disabled",
+      "icon": "menu-icon tf-icons ti ti-users",
       "slug": "app-email"
     }
   ]

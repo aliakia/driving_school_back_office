@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
+    public function fetchData() {
+        $dsData = DB::table('tb_users')->select('user_id', 'password', 'is_active')->get();
+        return response()->json([
+            'data' => $dsData
+        ]);
+    }
     public function index() {
         $pageConfigs = [
             'myLayout' => 'blank'
@@ -19,59 +25,60 @@ class AuthController extends Controller
     }
      
     public function login(Request $request) {
+        
         $request->validate([
             'user_id' => 'required',
             'password' => 'required',
         ]);
     
         $user = DB::table('tb_users')
-                ->select(  
-                    'user_id', 
-                    'employee_id',
-                    'password', 
-                    'first_name', 
-                    'middle_name', 
-                    'last_name', 
-                    'gender',
-                    'ds_code', 
-                    'certificate_tesda', 
-                    'certificate_tesda_expiration',
-                    'is_active',
-                    'description',
-                    'user_type', 
-                    'user_name', 
-                    'user_group', 
-                    DB::raw("encode(pic_id1, 'escape') as pic_id1"),
-                )
-                ->where('user_id', $request->user_id)
-                ->first();
-   
-        $_password = $request->password;
-        $_enc_password = hash("sha512", $_password);
-              
+        ->select(
+            'user_id',
+            'employee_id',
+            'first_name',
+            'last_name',
+            'ds_code',
+            'is_active', 
+            'user_type',
+            'password',
+            DB::raw("encode(pic_id1, 'escape') as pic_id1"),
+        )
+        ->where('user_id', $request->user_id)
+        ->first();
+            
+        // dd($user);
         if (!$user) {
-            return back()->withErrors([
-                'user_id' => 'No user id found.',
-            ]);            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found',
+            ], 422);
         }
-        // dd($_enc_password);
-        
-        if (strtoupper($_enc_password) !== $user->password) {
-            return back()->withErrors([
-                'password' => 'Password is wrong.',
-            ]); 
+    
+        $_enc_password = hash("sha512", $request->password);
+        if (strtoupper($_enc_password) !== strtoupper($user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Incorrect password',
+            ], 422);
         }
-
+    
         if (!$user->is_active) {
-            return back()->withErrors([
-                'user_id' => 'User is not active.',
-            ]);    
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User is not active',
+            ], 403);
         }
     
         $request->session()->put('logged_in', $user);
-      
-        return redirect()->intended(route('drivingSchool'));
+        // dd(session('logged_in'));  
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Login successful',
+        ]);
+
+        
     }
+    
 
     public function logout(Request $request)
     {

@@ -54,9 +54,9 @@ return [
     |
     */
 
-  'url' => env('APP_URL', 'http://localhost/vuexy'),
+  'url' => env('APP_URL', 'http://localhost/driving_school_back_office'),
 
-  'asset_url' => env('ASSET_URL', 'http://localhost/vuexy/public'),
+  'asset_url' => env('ASSET_URL', 'http://localhost/driving_school_back_office/public'),
 
   /*
     |--------------------------------------------------------------------------

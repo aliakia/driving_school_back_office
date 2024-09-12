@@ -39,6 +39,7 @@
 @section('page-script')
     <script src="{{ asset('assets/js/ui-toasts.js') }}"></script>
     <script>
+        const dsMapping = @json($ds_mapping);
         const createAccUrl = "{{ route('createAccount') }}"
         const adURL = "{{ route('accountsDataUrl') }}";
         const deleteFormBaseUrl = "{{ route('deleteAccount', ['user_id' => '__REPLACE__']) }}";
@@ -81,7 +82,7 @@
                     <tr>
                         <th>Employee ID</th>
                         <th>Name</th>
-                        <th>DS Code</th>
+                        <th>DS Name</th>
                         <th>Active Status</th>
                         <th>User Type</th>
                         <th>Actions</th>
@@ -223,12 +224,15 @@
                             @enderror --}}
                             {{-- <input type="text" id="ds_code" class="form-control" name="ds_code"
                                 placeholder="DS Code" /> --}}
-                            <label class="form-label" for="ds_code">DS Code</label>
+                            <label class="form-label" for="ds_code">DS Name</label>
                             <select id="ds_code" class="select2 form-select form-select-lg" name="ds_code">
                                 <option selected disabled>Select DS Code</option>
-                                @foreach ($ds_codes as $code)
-                                    <option value="{{ $code }}">{{ $code }}</option>
+                                @foreach ($ds_codes as $index => $code)
+                                    <option value="{{ $code }}">
+                                        {{ $ds_name[$index] }}
+                                    </option>
                                 @endforeach
+
                             </select>
                         </div>
                         <div class="form-group mb-2">

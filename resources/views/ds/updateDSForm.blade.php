@@ -22,6 +22,21 @@
 @endsection
 
 @section('content')
+    @if ($errors->any())
+        <div class="bs-toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+            <div class="toast-header">
+                <i class="ti ti-bell ti-xs me-2 text-danger"></i>
+                <div class="me-auto fw-semibold">Account not created!</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     <div class="row">
 
